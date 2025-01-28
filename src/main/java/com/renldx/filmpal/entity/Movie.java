@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
 @Entity
 @Table(name = "MOVIES", uniqueConstraints = @UniqueConstraint(columnNames = {"TITLE", "YEAR"}))
 public class Movie {
@@ -14,12 +15,10 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Getter
     @Setter
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Getter
     @Setter
     @Column(name = "RELEASE", nullable = false)
     private Date release;

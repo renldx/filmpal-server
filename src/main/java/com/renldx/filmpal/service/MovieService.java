@@ -4,7 +4,6 @@ import com.renldx.filmpal.entity.Movie;
 import com.renldx.filmpal.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +25,6 @@ public class MovieService {
 
     public Movie saveMovie(Movie movie) {
         return movieRepository.save(movie);
-    }
-
-    public Movie saveMovie(Date release, String title) {
-        return saveMovie(new Movie(release, title));
     }
 
     public void deleteMovie(int id) {
