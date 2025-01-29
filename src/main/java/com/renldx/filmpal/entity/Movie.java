@@ -26,8 +26,8 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(Date release, String title) {
-        this.release = release;
+    public Movie(String title, Date release) {
         this.title = title;
+        this.release = release;
     }
 }
