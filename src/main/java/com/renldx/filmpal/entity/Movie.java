@@ -21,6 +21,7 @@ public class Movie {
 
     @Setter
     @Column(name = "RELEASE", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date release;
 
     public Movie() {

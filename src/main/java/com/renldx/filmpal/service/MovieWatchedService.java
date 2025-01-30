@@ -28,8 +28,8 @@ public class MovieWatchedService {
 
     public Optional<MovieDto> getMovie(String code) throws Exception {
         var params = MovieHelper.GetMovieTitleAndRelease(code);
-        var release = MovieHelper.GetMovieRelease(params[1]); // TODO: Fix date query
-        var movie = movieRepository.findByTitle(params[0]);
+        var release = MovieHelper.GetMovieRelease(params[1]);
+        var movie = movieRepository.findByTitleAndRelease(params[0], release);
 
         return Optional.of(new MovieDto(movie));
     }
@@ -60,8 +60,8 @@ public class MovieWatchedService {
 
     public void deleteMovie(String code) throws Exception {
         var params = MovieHelper.GetMovieTitleAndRelease(code);
-        var release = MovieHelper.GetMovieRelease(params[1]); // TODO: Fix date query
-        var movie = movieRepository.findByTitle(params[0]);
+        var release = MovieHelper.GetMovieRelease(params[1]);
+        var movie = movieRepository.findByTitleAndRelease(params[0], release);
 
         movieRepository.delete(movie);
     }
