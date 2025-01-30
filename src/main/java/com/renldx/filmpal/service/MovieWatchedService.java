@@ -6,7 +6,7 @@ import com.renldx.filmpal.helpers.MovieHelper;
 import com.renldx.filmpal.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,7 +18,7 @@ public class MovieWatchedService {
         this.movieRepository = movieRepository;
     }
 
-    public List<MovieDto> getMovies() {
+    public Collection<MovieDto> getMovies() {
         return movieRepository.findAll().stream().map(m -> new MovieDto(m.getTitle(), m.getRelease())).collect(Collectors.toList());
     }
 
