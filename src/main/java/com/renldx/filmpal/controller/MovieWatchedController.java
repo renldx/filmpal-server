@@ -40,7 +40,7 @@ public class MovieWatchedController {
 
     @GetMapping("/movie")
     public ResponseEntity<?> getWatchedMovieByCode(@RequestParam(value = "code") String code) throws Exception {
-        Optional<MovieDto> movie = movieWatchedService.getMovie(code);
+        Optional<MovieDto> movie = movieWatchedService.getMovie(code); // TODO: Fix exception when not found
 
         return movie.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -48,7 +48,7 @@ public class MovieWatchedController {
 
     @PostMapping("/movie")
     public ResponseEntity<MovieDto> addWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
-        log.info("Request to add movie: {}", movie);
+        log.info("Request to add movie: {}", movie); // TODO Fix post/put handlers
 
         MovieDto result = movieWatchedService.saveMovie(movie);
 
@@ -76,7 +76,7 @@ public class MovieWatchedController {
 
     @DeleteMapping("/movie/{id}")
     public ResponseEntity<?> deleteWatchedMovie(@PathVariable int id) {
-        log.info("Request to delete movie by id: {}", id);
+        log.info("Request to delete movie by id: {}", id); // TODO: Fix return when movie doesn't exist
 
         movieWatchedService.deleteMovie(id);
 
@@ -85,7 +85,7 @@ public class MovieWatchedController {
 
     @DeleteMapping("/movie")
     public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) throws Exception {
-        log.info("Request to delete movie by code: {}", code);
+        log.info("Request to delete movie by code: {}", code); // TODO: Fix exception when movie doesn't exist
 
         movieWatchedService.deleteMovie(code);
 

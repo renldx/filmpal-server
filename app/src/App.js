@@ -1,42 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Home from './Home';
+import SuggestedMovies from "./SuggestedMovies";
+import WatchedMovies from "./WatchedMovies";
 
 const App = () => {
-
-    const [movies, setMovies] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        setLoading(true);
-
-        fetch('api/watched/movies')
-            .then(response => response.json())
-            .then(data => {
-                setMovies(data);
-                setLoading(false);
-            })
-    }, []);
-
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                <div className="App-intro">
-                    <h2>Movie List</h2>
-                    {movies.map(movie =>
-                        <div key={movie.id}>
-                            {movie.title}
-                        </div>
-                    )}
-                </div>
-            </header>
-        </div>
-    );
+        <Router>
+            <Routes>
+                <Route exact path="/" element={<Home/>}/>
+                <Route exact path="/new-movies" element={<SuggestedMovies/>}/>
+                <Route exact path="/old-movies" element={<WatchedMovies/>}/>
+            </Routes>
+        </Router>
+    )
 }
 
 export default App;
