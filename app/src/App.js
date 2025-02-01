@@ -10,7 +10,7 @@ const App = () => {
         <Router>
             <Routes>
                 <Route exact path="/" element={<Home/>}/>
-                <Route exact path="/new-movies" element={<SuggestedMovies/>}/>
+                <Route exact path="/new-movies/:genre" element={<SuggestedMovies/>}/>
                 <Route exact path="/old-movies" element={<WatchedMovies/>}/>
             </Routes>
         </Router>

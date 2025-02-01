@@ -1,10 +1,16 @@
 import {useEffect, useState} from "react";
 import {Button} from "reactstrap";
+import {useNavigate} from "react-router-dom";
 
 const Genres = () => {
 
     const [loading, setLoading] = useState(false);
     const [genres, setGenres] = useState([]);
+
+    const navigate = useNavigate();
+    const pickGenre = (e) => {
+        navigate(`/new-movies/${e.target.value}`)
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -24,7 +30,7 @@ const Genres = () => {
     return (
         <div>
             {genres.map(g =>
-                <Button value={g}>{g}</Button>
+                <Button key={g} value={g} onClick={(e) => pickGenre(e)}>{g}</Button>
             )}
         </div>
     );
