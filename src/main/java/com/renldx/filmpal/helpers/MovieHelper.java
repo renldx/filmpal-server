@@ -3,7 +3,6 @@ package com.renldx.filmpal.helpers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class MovieHelper {
     public static String GetMovieCode(String title, Date release) {
@@ -24,7 +23,6 @@ public class MovieHelper {
 
     public static Date GetMovieRelease(String release) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return formatter.parse(release);
     }

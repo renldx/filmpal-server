@@ -6,6 +6,7 @@ import com.renldx.filmpal.helpers.MovieHelper;
 import com.renldx.filmpal.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,25 +29,14 @@ public class MovieWatchedService {
 
     public Optional<MovieDto> getMovie(String code) throws Exception {
         var params = MovieHelper.GetMovieTitleAndRelease(code);
+
         var release = MovieHelper.GetMovieRelease(params[1]);
         var movie = movieRepository.findByTitleAndRelease(params[0], release);
 
-        return Optional.of(new MovieDto(movie));
+        return movie.map(MovieDto::new);
     }
 
-    public MovieDto saveMovie(int id, MovieDto movie) {
-        var existingMovie = movieRepository.findById(id).orElse(null);
-
-        assert existingMovie != null;
-        existingMovie.setTitle(movie.getTitle());
-        existingMovie.setRelease(movie.getRelease());
-
-        movieRepository.save(existingMovie);
-
-        return movie;
-    }
-
-    public MovieDto saveMovie(MovieDto movie) {
+    public MovieDto createMovie(MovieDto movie) {
         var newMovie = new Movie(movie.getTitle(), movie.getRelease());
 
         movieRepository.save(newMovie);
@@ -54,15 +44,49 @@ public class MovieWatchedService {
         return movie;
     }
 
+    public Optional<MovieDto> updateMovie(int id, MovieDto movie) {
+        var existingMovie = movieRepository.findById(id);
+
+        if (existingMovie.isPresent()) {
+            existingMovie.get().setTitle(movie.getTitle());
+            existingMovie.get().setRelease(movie.getRelease());
+
+            movieRepository.save(existingMovie.get());
+
+            return Optional.of(movie);
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<MovieDto> updateMovie(String code, MovieDto movie) throws ParseException {
+        var params = MovieHelper.GetMovieTitleAndRelease(code);
+
+        var release = MovieHelper.GetMovieRelease(params[1]);
+        var existingMovie = movieRepository.findByTitleAndRelease(params[0], release);
+
+        if (existingMovie.isPresent()) {
+            existingMovie.get().setTitle(movie.getTitle());
+            existingMovie.get().setRelease(movie.getRelease());
+
+            movieRepository.save(existingMovie.get());
+
+            return Optional.of(movie);
+        }
+
+        return Optional.empty();
+    }
+
     public void deleteMovie(int id) {
         movieRepository.deleteById(id);
     }
 
-    public void deleteMovie(String code) throws Exception {
+    public void deleteMovie(String code) throws ParseException {
         var params = MovieHelper.GetMovieTitleAndRelease(code);
+
         var release = MovieHelper.GetMovieRelease(params[1]);
         var movie = movieRepository.findByTitleAndRelease(params[0], release);
 
-        movieRepository.delete(movie);
+        movie.ifPresent(value -> deleteMovie(value.getId()));
     }
 }
