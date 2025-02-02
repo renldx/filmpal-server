@@ -8,8 +8,8 @@ const Genres = () => {
     const [genres, setGenres] = useState([]);
 
     const navigate = useNavigate();
-    const pickGenre = (e) => {
-        navigate(`/new-movies/${e.target.value}`)
+    const pickGenre = (event) => {
+        navigate(`/new-movies/${event.target.value}`)
     }
 
     useEffect(() => {
@@ -29,8 +29,8 @@ const Genres = () => {
 
     return (
         <ButtonGroup vertical>
-            {genres.map(g =>
-                <Button key={g} value={g} onClick={(e) => pickGenre(e)}>{g}</Button>
+            {genres.map(genre =>
+                <Button key={genre} value={genre} onClick={(event) => pickGenre(event)}>{genre}</Button>
             )}
         </ButtonGroup>
     );

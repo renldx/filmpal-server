@@ -7,23 +7,26 @@ import lombok.Setter;
 import java.util.Date;
 
 @Getter
+@Setter
 public class MovieDto {
 
-    private final String code;
-    @Setter
     private String title;
-    @Setter
     private Date release;
+
+    public MovieDto() {
+    }
 
     public MovieDto(String title, Date release) {
         this.title = title;
         this.release = release;
-        code = MovieHelper.GetMovieCode(title, release);
     }
 
     public MovieDto(Movie movie) {
         this.title = movie.getTitle();
         this.release = movie.getRelease();
-        code = MovieHelper.GetMovieCode(title, release);
+    }
+
+    public String getCode() {
+        return MovieHelper.GetMovieCode(title, release);
     }
 }

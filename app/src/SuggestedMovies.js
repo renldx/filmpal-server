@@ -1,14 +1,29 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import {CardGroup, Col, Container, Row} from "reactstrap";
+import {Button, CardGroup, Container, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import SuggestedMovie from "./SuggestedMovie";
 
 const SuggestedMovies = () => {
 
     const { genre } = useParams();
+
     const [loading, setLoading] = useState(false);
     const [movies, setMovies] = useState([]);
+
+    const [modal, setModal] = useState(false);
+    const [movie, setMovie] = useState(undefined);
+
+    const toggleModal = (event, movie) => {
+        setMovie(movie);
+        setModal(!modal);
+    }
+
+    const selectMovie = () => {
+        toggleModal();
+    }
+
+    const releaseYear = (date) => new Date(date).getFullYear();
 
     useEffect(() => {
         setLoading(true);
@@ -29,9 +44,24 @@ const SuggestedMovies = () => {
         <Container>
             <CardGroup>
                 {movies.map(m =>
-                    <SuggestedMovie key={m.code} movie={m}/>
+                    <SuggestedMovie key={m.code} movie={m} releaseYear={releaseYear} toggleModal={toggleModal}/>
                 )}
             </CardGroup>
+
+            <Modal isOpen={modal} toggle={toggleModal}>
+                <ModalHeader toggle={toggleModal}>Confirm Selected Movie</ModalHeader>
+                <ModalBody>
+                    Are you sure you want to watch {movie?.title} ({releaseYear(movie?.release)})?
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={selectMovie}>
+                        Yes
+                    </Button>{' '}
+                    <Button color="secondary" onClick={toggleModal}>
+                        No
+                    </Button>
+                </ModalFooter>
+            </Modal>
         </Container>
     );
 

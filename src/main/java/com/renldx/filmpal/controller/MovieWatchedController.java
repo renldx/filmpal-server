@@ -38,17 +38,17 @@ public class MovieWatchedController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/movie")
+    /*@GetMapping("/movie")
     public ResponseEntity<?> getWatchedMovieByCode(@RequestParam(value = "code") String code) throws Exception {
         Optional<MovieDto> movie = movieWatchedService.getMovie(code); // TODO: Fix exception when not found
 
         return movie.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+    }*/
 
     @PostMapping("/movie")
     public ResponseEntity<MovieDto> addWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
-        log.info("Request to add movie: {}", movie); // TODO Fix post/put handlers
+        log.info("Request to add movie: {}", movie); // TODO Fix date formats
 
         MovieDto result = movieWatchedService.saveMovie(movie);
 
@@ -58,21 +58,21 @@ public class MovieWatchedController {
 
     @PutMapping("/movie/{id}")
     public ResponseEntity<MovieDto> updateWatchedMovie(@Valid @RequestBody MovieDto movie, @PathVariable int id) throws Exception {
-        log.info("Request to update movie by id: {}", movie);
+        log.info("Request to update movie by id: {}", movie); // TODO: Fix date formats, allow null params?
 
         MovieDto result = movieWatchedService.saveMovie(id, movie);
 
         return ResponseEntity.ok().body(result);
     }
 
-    @PutMapping("/movie")
+    /*@PutMapping("/movie")
     public ResponseEntity<MovieDto> updateWatchedMovie(@Valid @RequestBody MovieDto movie) {
         log.info("Request to update movie by code: {}", movie);
 
         MovieDto result = movieWatchedService.saveMovie(movie);
 
         return ResponseEntity.ok().body(result);
-    }
+    }*/
 
     @DeleteMapping("/movie/{id}")
     public ResponseEntity<?> deleteWatchedMovie(@PathVariable int id) {
@@ -83,12 +83,12 @@ public class MovieWatchedController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/movie")
+    /*@DeleteMapping("/movie")
     public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) throws Exception {
         log.info("Request to delete movie by code: {}", code); // TODO: Fix exception when movie doesn't exist
 
         movieWatchedService.deleteMovie(code);
 
         return ResponseEntity.ok().build();
-    }
+    }*/
 }
