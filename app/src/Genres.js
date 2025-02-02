@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Button} from "reactstrap";
+import {Button, ButtonGroup} from "reactstrap";
 import {useNavigate} from "react-router-dom";
 
 const Genres = () => {
@@ -28,11 +28,11 @@ const Genres = () => {
     }
 
     return (
-        <div>
+        <ButtonGroup vertical>
             {genres.map(g =>
                 <Button key={g} value={g} onClick={(e) => pickGenre(e)}>{g}</Button>
             )}
-        </div>
+        </ButtonGroup>
     );
 
 }

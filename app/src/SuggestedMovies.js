@@ -1,6 +1,8 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {useEffect, useState} from 'react';
-import SuggestedMovie from "./SuggestedMovie";
 import {useParams} from "react-router-dom";
+import {CardGroup, Col, Container, Row} from "reactstrap";
+import SuggestedMovie from "./SuggestedMovie";
 
 const SuggestedMovies = () => {
 
@@ -24,13 +26,13 @@ const SuggestedMovies = () => {
     }
 
     return (
-        <div>
-            {movies.map(m =>
-                <div key={m.code}>
-                    <SuggestedMovie movie={{m}}/>
-                </div>
-            )}
-        </div>
+        <Container>
+            <CardGroup>
+                {movies.map(m =>
+                    <SuggestedMovie key={m.code} movie={m}/>
+                )}
+            </CardGroup>
+        </Container>
     );
 
 }

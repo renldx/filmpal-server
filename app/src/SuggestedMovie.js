@@ -1,22 +1,22 @@
-import {Button, Card, CardBody, CardSubtitle, CardText, CardTitle} from "reactstrap";
+import {Card, CardBody, CardSubtitle, CardText, CardTitle} from "reactstrap";
 
-const SuggestedMovie = (movie) => {
+const SuggestedMovie = ({movie}) => {
+    const releaseYear = (date) => {
+        return new Date(date).getFullYear();
+    }
+
     return (
-        <Card style={{width: '18rem'}}>
+        <Card style={{minWidth: '16rem', maxWidth: '32rem', margin: '0.5rem'}}>
             <img alt="Sample" src="https://picsum.photos/300/200"/>
             <CardBody>
                 <CardTitle tag="h5">
                     {movie.title}
                 </CardTitle>
                 <CardSubtitle className="mb-2 text-muted" tag="h6">
-                    {movie.release}
+                    {releaseYear(movie.release)}
                 </CardSubtitle>
                 <CardText>
-                    Some quick example text to build on the card title and make up the bulk of the card‘s content.
                 </CardText>
-                <Button>
-                    Button
-                </Button>
             </CardBody>
         </Card>
     );

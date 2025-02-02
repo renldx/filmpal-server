@@ -1,15 +1,14 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {Container} from 'reactstrap';
 import Genres from "./Genres";
 
 const Home = () => {
     return (
-        <div>
-            <Container fluid>
-                <Genres/>
-            </Container>
-        </div>
+        <Container fluid style={{marginTop: '1rem'}}>
+            <Genres/>
+        </Container>
     );
 }
 
