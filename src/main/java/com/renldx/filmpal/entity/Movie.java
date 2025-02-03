@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 @Entity
-@Table(name = "MOVIES", uniqueConstraints = @UniqueConstraint(columnNames = {"TITLE", "YEAR"}))
+@Table(name = "MOVIES", uniqueConstraints = @UniqueConstraint(columnNames = {"TITLE", "RELEASE"}))
 public class Movie {
 
     @Id

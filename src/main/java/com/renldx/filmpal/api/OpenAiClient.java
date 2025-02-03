@@ -35,7 +35,7 @@ public class OpenAiClient {
             watchedMovies = watchedMoviesList.stream().map(MovieDto::getTitle).collect(Collectors.joining(", "));
         }
 
-        var requestUserMessage = String.format("Excluding the following: %s; list the latest top 5 %s movies and their release dates in UTC format.", watchedMovies, genre);
+        var requestUserMessage = String.format("Excluding the following: %s; list the latest top 5 %s movies and their release dates in ISO 8601 format.", watchedMovies, genre);
 
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4o-mini")

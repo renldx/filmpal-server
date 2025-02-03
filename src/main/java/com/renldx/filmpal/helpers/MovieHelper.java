@@ -1,5 +1,7 @@
 package com.renldx.filmpal.helpers;
 
+import com.renldx.filmpal.constants.ExceptionMessages;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +17,7 @@ public class MovieHelper {
         var result = code.split("_");
 
         if (result.length != 2) {
-            throw new IllegalArgumentException("Invalid movie code");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_CODE_FORMAT);
         }
 
         return result;

@@ -1,5 +1,6 @@
 package com.renldx.filmpal.controller;
 
+import com.renldx.filmpal.constants.ExceptionMessages;
 import com.renldx.filmpal.entity.MovieDto;
 import com.renldx.filmpal.service.MovieWatchedService;
 import jakarta.validation.Valid;
@@ -47,7 +48,7 @@ public class MovieWatchedController {
         try {
             movie = movieWatchedService.getMovie(code);
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid code format", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessages.INVALID_CODE_FORMAT, e);
         }
 
         return movie.map(response -> ResponseEntity.ok().body(response))
@@ -56,7 +57,7 @@ public class MovieWatchedController {
 
     @PostMapping("/movie")
     public ResponseEntity<MovieDto> addWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
-        log.info("Request to add movie: {}", movie); // TODO: Fix broken dates
+        log.info("Request to add movie: {}", movie); // TODO: Fix unique constraint
 
         MovieDto result = movieWatchedService.createMovie(movie);
 
