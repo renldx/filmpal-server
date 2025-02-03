@@ -6,7 +6,7 @@ import SuggestedMovie from "./SuggestedMovie";
 
 const SuggestedMovies = () => {
 
-    const { genre } = useParams();
+    const {genre} = useParams();
 
     const [loading, setLoading] = useState(false);
     const [movies, setMovies] = useState([]);
@@ -20,6 +20,21 @@ const SuggestedMovies = () => {
     }
 
     const selectMovie = () => {
+        (async () => {
+            delete movie["code"];
+            const rawResponse = await fetch(`/api/watched/movie`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(movie)
+            });
+            const responseContent = await rawResponse.json();
+
+            console.log(responseContent);
+        })();
+
         toggleModal();
     }
 
