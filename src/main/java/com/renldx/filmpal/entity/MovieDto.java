@@ -1,6 +1,7 @@
 package com.renldx.filmpal.entity;
 
 import com.renldx.filmpal.helpers.MovieHelper;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,9 @@ import java.util.Date;
 @Setter
 public class MovieDto {
 
+    @NotNull
     private String title;
+    @NotNull
     private Date release;
 
     public MovieDto() {

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,7 +33,7 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/movie/{id}")
-    public ResponseEntity<?> getWatchedMovieById(@PathVariable int id) {
+    public ResponseEntity<?> getWatchedMovie(@PathVariable int id) {
         Optional<MovieDto> movie = movieWatchedService.getMovie(id);
 
         return movie.map(response -> ResponseEntity.ok().body(response))
@@ -40,8 +41,14 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/movie")
-    public ResponseEntity<?> getWatchedMovieByCode(@RequestParam(value = "code") String code) throws Exception {
-        Optional<MovieDto> movie = movieWatchedService.getMovie(code); // TODO: Fix exception when invalid code
+    public ResponseEntity<?> getWatchedMovie(@RequestParam(value = "code") String code) throws Exception {
+        Optional<MovieDto> movie;
+
+        try {
+            movie = movieWatchedService.getMovie(code);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid code format", e);
+        }
 
         return movie.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -49,7 +56,7 @@ public class MovieWatchedController {
 
     @PostMapping("/movie")
     public ResponseEntity<MovieDto> addWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
-        log.info("Request to add movie: {}", movie); // TODO: Restrict invalid properties?
+        log.info("Request to add movie: {}", movie); // TODO: Fix broken dates
 
         MovieDto result = movieWatchedService.createMovie(movie);
 
@@ -59,7 +66,7 @@ public class MovieWatchedController {
 
     @PutMapping("/movie/{id}")
     public ResponseEntity<Optional<MovieDto>> updateWatchedMovie(@Valid @RequestBody MovieDto movie, @PathVariable int id) {
-        log.info("Request to update movie by id: {}", movie); // TODO: Same as above & allow null params?
+        log.info("Request to update movie by id: {}", movie);
 
         var result = movieWatchedService.updateMovie(id, movie);
 
@@ -72,7 +79,7 @@ public class MovieWatchedController {
 
     @PutMapping("/movie")
     public ResponseEntity<Optional<MovieDto>> updateWatchedMovie(@Valid @RequestBody MovieDto movie, @RequestParam(value = "code") String code) throws ParseException {
-        log.info("Request to update movie by code: {}", movie); // TODO: Same as above & allow null params?
+        log.info("Request to update movie by code: {}", movie);
 
         var result = movieWatchedService.updateMovie(code, movie);
 
@@ -85,7 +92,7 @@ public class MovieWatchedController {
 
     @DeleteMapping("/movie/{id}")
     public ResponseEntity<?> deleteWatchedMovie(@PathVariable int id) {
-        log.info("Request to delete movie by id: {}", id); // TODO: Fix return when movie doesn't exist
+        log.info("Request to delete movie by id: {}", id);
 
         movieWatchedService.deleteMovie(id);
 
@@ -94,7 +101,7 @@ public class MovieWatchedController {
 
     @DeleteMapping("/movie")
     public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) throws ParseException {
-        log.info("Request to delete movie by code {}", code); // TODO: Fix return when movie doesn't exist
+        log.info("Request to delete movie by code {}", code);
 
         movieWatchedService.deleteMovie(code);
 
