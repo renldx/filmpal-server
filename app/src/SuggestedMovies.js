@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Button, CardGroup, Container, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import SuggestedMovie from "./SuggestedMovie";
 
@@ -19,6 +19,8 @@ const SuggestedMovies = () => {
         setModal(!modal);
     }
 
+    let navigate = useNavigate();
+
     const selectMovie = () => {
         (async () => {
             const rawResponse = await fetch(`/api/watched/movie`, {
@@ -29,12 +31,10 @@ const SuggestedMovies = () => {
                 },
                 body: JSON.stringify({"title": movie.title, "release": movie.release})
             });
-            const responseContent = await rawResponse.json();
-
-            console.log(responseContent);
         })();
 
         toggleModal();
+        navigate("/");
     }
 
     const releaseYear = (date) => new Date(date).getFullYear();
