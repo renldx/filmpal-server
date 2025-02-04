@@ -61,7 +61,7 @@ public class MovieWatchedController {
 
         MovieDto result = movieWatchedService.createMovie(movie);
 
-        return ResponseEntity.created(new URI("#"))
+        return ResponseEntity.created(new URI("/api/watched/movie?code=" + result.getCode()))
                 .body(result);
     }
 
