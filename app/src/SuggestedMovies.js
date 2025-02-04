@@ -23,7 +23,7 @@ const SuggestedMovies = () => {
 
     const selectMovie = () => {
         (async () => {
-            const rawResponse = await fetch(`/api/watched/movie`, {
+            const rawResponse = await fetch("/api/watched/movie", {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

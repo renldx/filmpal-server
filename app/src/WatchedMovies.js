@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Container, Modal, ModalBody, ModalFooter, ModalHeader, Table} from 'reactstrap';
+import {useNavigate} from "react-router-dom";
 
 const WatchedMovies = () => {
 
@@ -15,6 +16,8 @@ const WatchedMovies = () => {
     }
 
     const releaseYear = (date) => new Date(date).getFullYear();
+
+    let navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -67,6 +70,8 @@ const WatchedMovies = () => {
                 {movieList}
                 </tbody>
             </Table>
+
+            <Button color="success" onClick={() => navigate("add")}>Add</Button>
 
             <Modal isOpen={modal} toggle={toggleModal}>
                 <ModalHeader toggle={toggleModal}>Confirm Selected Movie</ModalHeader>
