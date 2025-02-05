@@ -6,6 +6,7 @@ const AddWatchedMovie = () => {
     const [formData, setFormData] = useState({
         title: "",
         release: "",
+        errors: {},
     });
 
     let navigate = useNavigate();
@@ -18,11 +19,29 @@ const AddWatchedMovie = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        setFormData({
-            ...formData,
-        });
+        if (validateForm()) {
+            setFormData({
+                ...formData,
+            });
 
-        addMovie();
+            addMovie();
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!formData.title) {
+            errors.title = "Title is required";
+        }
+
+        if (!formData.release) {
+            errors.release = "Release date is required";
+        }
+
+        setFormData((prevState) => ({ ...prevState, errors }));
+
+        return Object.keys(errors).length === 0;
     };
 
     const addMovie = () => {
@@ -38,18 +57,34 @@ const AddWatchedMovie = () => {
                     release: formData.release,
                 }),
             });
-        })();
 
-        navigate("/old-movies");
+            navigate("/old-movies");
+        })();
     };
 
     return (
         <Container>
             <Form onSubmit={handleSubmit}>
                 <FormGroup>
-                    <Label for="title">Title</Label>
+                    <Label for="title">
+                        Title
+                        {formData.errors.title && (
+                            <span
+                                style={{ color: "red", marginLeft: "0.5rem" }}>
+                                {formData.errors.title}
+                            </span>
+                        )}
+                    </Label>
                     <Input onChange={handleChange} id="title" name="title" />
-                    <Label for="release">Release</Label>
+                    <Label for="release">
+                        Release
+                        {formData.errors.release && (
+                            <span
+                                style={{ color: "red", marginLeft: "0.5rem" }}>
+                                {formData.errors.release}
+                            </span>
+                        )}
+                    </Label>
                     <Input
                         onChange={handleChange}
                         id="release"

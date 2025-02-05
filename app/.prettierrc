@@ -1,4 +1,5 @@
 {
+  "bracketSameLine": true,
   "importOrder": [
     ".css$",
     "^[./]"
