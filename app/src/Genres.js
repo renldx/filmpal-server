@@ -1,26 +1,25 @@
-import {useEffect, useState} from "react";
-import {Button, ButtonGroup} from "reactstrap";
-import {useNavigate} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, ButtonGroup } from "reactstrap";
 
 const Genres = () => {
-
     const [loading, setLoading] = useState(false);
     const [genres, setGenres] = useState([]);
 
     const navigate = useNavigate();
     const pickGenre = (event) => {
-        navigate(`/new-movies/${event.target.value}`)
-    }
+        navigate(`/new-movies/${event.target.value}`);
+    };
 
     useEffect(() => {
         setLoading(true);
 
-        fetch('api/genres')
-            .then(response => response.json())
-            .then(data => {
+        fetch("api/genres")
+            .then((response) => response.json())
+            .then((data) => {
                 setGenres(data);
                 setLoading(false);
-            })
+            });
     }, []);
 
     if (loading) {
@@ -29,12 +28,17 @@ const Genres = () => {
 
     return (
         <ButtonGroup vertical>
-            {genres.map(genre =>
-                <Button key={genre} value={genre} onClick={(event) => pickGenre(event)}>{genre}</Button>
-            )}
+            {genres.map((genre) => (
+                <Button
+                    key={genre}
+                    value={genre}
+                    onClick={(event) => pickGenre(event)}
+                >
+                    {genre}
+                </Button>
+            ))}
         </ButtonGroup>
     );
-
-}
+};
 
 export default Genres;

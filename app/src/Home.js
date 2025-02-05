@@ -1,15 +1,17 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import {Container} from 'reactstrap';
+import React from "react";
+import { Container } from "reactstrap";
+
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import Genres from "./Genres";
 
 const Home = () => {
     return (
-        <Container fluid style={{marginTop: '1rem'}}>
-            <Genres/>
+        <Container fluid>
+            <Genres />
         </Container>
     );
-}
+};
 
 export default Home;
