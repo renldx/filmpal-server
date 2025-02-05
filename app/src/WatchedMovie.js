@@ -1,8 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 
-const AddWatchedMovie = () => {
+const WatchedMovie = () => {
+    const { code } = useParams();
+
+    const [loading, setLoading] = useState(false);
+
     const [formData, setFormData] = useState({
         title: "",
         release: "",
@@ -10,6 +14,23 @@ const AddWatchedMovie = () => {
     });
 
     let navigate = useNavigate();
+
+    useEffect(() => {
+        if (code) {
+            setLoading(true);
+
+            fetch(`/api/watched/movie?code=${code}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    setFormData({
+                        title: data.title,
+                        release: data.release,
+                        errors: {},
+                    });
+                    setLoading(false);
+                });
+        }
+    }, []);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -24,7 +45,11 @@ const AddWatchedMovie = () => {
                 ...formData,
             });
 
-            addMovie();
+            if (code) {
+                updateMovie();
+            } else {
+                createMovie();
+            }
         }
     };
 
@@ -44,7 +69,7 @@ const AddWatchedMovie = () => {
         return Object.keys(errors).length === 0;
     };
 
-    const addMovie = () => {
+    const createMovie = () => {
         (async () => {
             const rawResponse = await fetch("/api/watched/movie", {
                 method: "POST",
@@ -62,8 +87,31 @@ const AddWatchedMovie = () => {
         })();
     };
 
+    const updateMovie = () => {
+        (async () => {
+            const rawResponse = await fetch(`/api/watched/movie?code=${code}`, {
+                method: "PUT",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title: formData.title,
+                    release: formData.release,
+                }),
+            });
+
+            navigate("/old-movies");
+        })();
+    };
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <Container>
+            <h2>{code ? "Edit" : "Add"} Movie</h2>
             <Form onSubmit={handleSubmit}>
                 <FormGroup>
                     <Label for="title">
@@ -75,7 +123,12 @@ const AddWatchedMovie = () => {
                             </span>
                         )}
                     </Label>
-                    <Input onChange={handleChange} id="title" name="title" />
+                    <Input
+                        onChange={handleChange}
+                        id="title"
+                        name="title"
+                        value={formData?.title}
+                    />
                     <Label for="release">
                         Release
                         {formData.errors.release && (
@@ -90,12 +143,24 @@ const AddWatchedMovie = () => {
                         id="release"
                         name="release"
                         type="date"
+                        value={formData?.release}
                     />
                 </FormGroup>
-                <Button type="submit">Submit</Button>
+                <Button
+                    color="primary"
+                    style={{ margin: "0.125rem" }}
+                    type="submit">
+                    Confirm
+                </Button>
+                <Button
+                    color="secondary"
+                    style={{ margin: "0.125rem" }}
+                    onClick={() => navigate(-1)}>
+                    Back
+                </Button>
             </Form>
         </Container>
     );
 };
 
-export default AddWatchedMovie;
+export default WatchedMovie;

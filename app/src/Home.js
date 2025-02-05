@@ -9,6 +9,7 @@ import Genres from "./Genres";
 const Home = () => {
     return (
         <Container fluid>
+            <h2>Genres</h2>
             <Genres />
         </Container>
     );

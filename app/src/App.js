@@ -3,9 +3,9 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import "./App.css";
 
-import AddWatchedMovie from "./AddWatchedMovie";
 import Home from "./Home";
 import SuggestedMovies from "./SuggestedMovies";
+import WatchedMovie from "./WatchedMovie";
 import WatchedMovies from "./WatchedMovies";
 
 const App = () => {
@@ -22,7 +22,12 @@ const App = () => {
                 <Route
                     exact
                     path="/old-movies/add"
-                    element={<AddWatchedMovie />}
+                    element={<WatchedMovie />}
+                />
+                <Route
+                    exact
+                    path="/old-movies/edit/:code"
+                    element={<WatchedMovie />}
                 />
             </Routes>
         </Router>

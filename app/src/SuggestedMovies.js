@@ -68,6 +68,7 @@ const SuggestedMovies = () => {
 
     return (
         <Container>
+            <h2>Suggested Movies</h2>
             <CardGroup>
                 {movies.map((m) => (
                     <SuggestedMovie

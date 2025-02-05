@@ -37,6 +37,10 @@ const WatchedMovies = () => {
             });
     }, []);
 
+    const updateMovie = (event, code) => {
+        navigate(`edit/${code}`);
+    };
+
     const deleteMovie = async () => {
         await fetch(`api/watched/movie?code=${movie.code}`, {
             method: "DELETE",
@@ -64,9 +68,15 @@ const WatchedMovies = () => {
                 <td>{movie.release}</td>
                 <td>
                     <Button
+                        color="primary"
+                        style={{ margin: "0.125rem" }}
+                        onClick={(event) => updateMovie(event, movie.code)}>
+                        Edit
+                    </Button>
+                    <Button
                         color="danger"
-                        onClick={(event) => toggleModal(event, movie)}
-                    >
+                        style={{ margin: "0.125rem" }}
+                        onClick={(event) => toggleModal(event, movie)}>
                         Delete
                     </Button>
                 </td>
@@ -76,6 +86,7 @@ const WatchedMovies = () => {
 
     return (
         <Container>
+            <h2>Watch History</h2>
             <Table>
                 <thead>
                     <tr>
@@ -103,7 +114,7 @@ const WatchedMovies = () => {
                     <Button color="primary" onClick={deleteMovie}>
                         Yes
                     </Button>{" "}
-                    <Button color="secondary" onClick={toggleModal}>
+                    <Button color="danger" onClick={toggleModal}>
                         No
                     </Button>
                 </ModalFooter>

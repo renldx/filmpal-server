@@ -32,8 +32,7 @@ const Genres = () => {
                 <Button
                     key={genre}
                     value={genre}
-                    onClick={(event) => pickGenre(event)}
-                >
+                    onClick={(event) => pickGenre(event)}>
                     {genre}
                 </Button>
             ))}
