@@ -63,19 +63,17 @@ const WatchedMovies = () => {
 
     const movieList = movies.map((movie) => {
         return (
-            <tr key={movie.code} style={{ verticalAlign: "middle" }}>
-                <td style={{ whiteSpace: "nowrap" }}>{movie.title}</td>
+            <tr key={movie.code}>
+                <td>{movie.title}</td>
                 <td>{movie.release}</td>
                 <td>
                     <Button
                         color="primary"
-                        style={{ margin: "0.125rem" }}
                         onClick={(event) => updateMovie(event, movie.code)}>
                         Edit
                     </Button>
                     <Button
                         color="danger"
-                        style={{ margin: "0.125rem" }}
                         onClick={(event) => toggleModal(event, movie)}>
                         Delete
                     </Button>
@@ -85,7 +83,7 @@ const WatchedMovies = () => {
     });
 
     return (
-        <Container>
+        <Container className="watched-movies">
             <h2>Watch History</h2>
             <Table>
                 <thead>

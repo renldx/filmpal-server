@@ -1,38 +1,49 @@
-.App {
-    text-align: center;
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+
+:root {
+    --spacer-small: 0.25rem;
+    --spacer-medium: 0.5rem;
 }
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+body {
+    font-family: 'Josefin Sans', serif !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+h1 {
+    margin-left: 1rem;
 }
 
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.genre {
+    margin: var(--spacer-small);
+    text-transform: capitalize;
+    width: 10rem;
 }
 
-.App-link {
-    color: #61dafb;
+.suggested-movie {
+    float: left;
+    width: 24rem;
+    margin: var(--spacer-medium);
+    cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.suggested-movie h4 {
+    height: 3.5rem;
+    overflow: hidden;
+}
+
+.watched-movies tr {
+    vertical-align: middle;
+}
+
+.watched-movies button, .watched-movie button {
+    margin: var(--spacer-small);
+}
+
+.watched-movie label:not(:first-child) {
+    margin-top: var(--spacer-medium);
+}
+
+.watched-movie .error {
+    color: red;
+    margin-left: var(--spacer-medium);
 }

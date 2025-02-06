@@ -6,16 +6,11 @@ const SuggestedMovie = ({ movie, releaseYear, toggleModal }) => {
             onClick={(event) => {
                 toggleModal(event, movie);
             }}
-            style={{
-                minWidth: "16rem",
-                maxWidth: "24rem",
-                margin: "0.5rem",
-                cursor: "pointer",
-            }}>
+            className="suggested-movie">
             <img alt="Sample" src="https://picsum.photos/300/200" />
             <CardBody>
-                <CardTitle tag="h5">{movie.title}</CardTitle>
-                <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <CardTitle tag="h4">{movie.title}</CardTitle>
+                <CardSubtitle tag="h5" className="mb-2 text-muted">
                     {releaseYear(movie.release)}
                 </CardSubtitle>
                 <CardText></CardText>

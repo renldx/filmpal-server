@@ -110,15 +110,14 @@ const WatchedMovie = () => {
     }
 
     return (
-        <Container>
+        <Container className="watched-movie">
             <h2>{code ? "Edit" : "Add"} Movie</h2>
             <Form onSubmit={handleSubmit}>
                 <FormGroup>
                     <Label for="title">
                         Title
                         {formData.errors.title && (
-                            <span
-                                style={{ color: "red", marginLeft: "0.5rem" }}>
+                            <span className="error">
                                 {formData.errors.title}
                             </span>
                         )}
@@ -132,8 +131,7 @@ const WatchedMovie = () => {
                     <Label for="release">
                         Release
                         {formData.errors.release && (
-                            <span
-                                style={{ color: "red", marginLeft: "0.5rem" }}>
+                            <span className="error">
                                 {formData.errors.release}
                             </span>
                         )}
@@ -146,16 +144,10 @@ const WatchedMovie = () => {
                         value={formData?.release}
                     />
                 </FormGroup>
-                <Button
-                    color="primary"
-                    style={{ margin: "0.125rem" }}
-                    type="submit">
+                <Button color="primary" type="submit">
                     Confirm
                 </Button>
-                <Button
-                    color="secondary"
-                    style={{ margin: "0.125rem" }}
-                    onClick={() => navigate(-1)}>
+                <Button color="secondary" onClick={() => navigate(-1)}>
                     Back
                 </Button>
             </Form>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, ButtonGroup } from "reactstrap";
+import { Button } from "reactstrap";
 
 const Genres = () => {
     const [loading, setLoading] = useState(false);
@@ -27,16 +27,18 @@ const Genres = () => {
     }
 
     return (
-        <ButtonGroup vertical>
+        <div>
             {genres.map((genre) => (
                 <Button
                     key={genre}
                     value={genre}
-                    onClick={(event) => pickGenre(event)}>
-                    {genre}
+                    onClick={(event) => pickGenre(event)}
+                    size="lg"
+                    className="genre">
+                    {genre.toLowerCase()}
                 </Button>
             ))}
-        </ButtonGroup>
+        </div>
     );
 };
 

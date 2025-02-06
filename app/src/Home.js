@@ -8,8 +8,9 @@ import Genres from "./Genres";
 
 const Home = () => {
     return (
-        <Container fluid>
-            <h2>Genres</h2>
+        <Container>
+            <h2>Movie Suggestions</h2>
+            <h3>Pick a genre:</h3>
             <Genres />
         </Container>
     );

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
     Button,
-    CardGroup,
     Container,
     Modal,
     ModalBody,
@@ -67,9 +66,10 @@ const SuggestedMovies = () => {
     }
 
     return (
-        <Container>
-            <h2>Suggested Movies</h2>
-            <CardGroup>
+        <Container fluid>
+            <h2>Movie Suggestions</h2>
+            <h3>Pick a movie:</h3>
+            <div>
                 {movies.map((m) => (
                     <SuggestedMovie
                         key={m.code}
@@ -78,7 +78,7 @@ const SuggestedMovies = () => {
                         toggleModal={toggleModal}
                     />
                 ))}
-            </CardGroup>
+            </div>
 
             <Modal isOpen={modal} toggle={toggleModal}>
                 <ModalHeader toggle={toggleModal}>
