@@ -56,7 +56,7 @@ public class MovieWatchedController {
     }
 
     @PostMapping("/movie")
-    public ResponseEntity<MovieDto> addWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
+    public ResponseEntity<MovieDto> createWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
         log.info("Request to add movie: {}", movie); // TODO: Fix unique constraint & return URI
 
         MovieDto result = movieWatchedService.createMovie(movie);

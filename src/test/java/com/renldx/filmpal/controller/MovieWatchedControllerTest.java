@@ -1,8 +1,8 @@
 package com.renldx.filmpal.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,26 +14,63 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MovieSuggestedControllerTest {
+class MovieWatchedControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Nested
-    class getSuggestedMoviesTest {
+    @Autowired
+    private ObjectMapper objectMapper;
 
-        @ParameterizedTest
-        @ValueSource(strings = {"ACTION"})
-        void getSuggestedMovies_ReturnsSuggestedMovies(String genre) throws Exception {
-            var result = mockMvc.perform(get("/api/suggested/" + genre))
+    @Nested
+    class getWatchedMoviesTest {
+
+        @Test
+        void getWatchedMovies_ReturnsWatchedMovies() throws Exception {
+            var result = mockMvc.perform(get("/api/watched/movies/"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
 
             var json = result.getResponse().getContentAsString();
 
-            assert (!json.isBlank()); // TODO: Mock services
+            assert (!json.isBlank()); // TODO: Add seed data
         }
+
+    }
+
+    @Nested
+    class getWatchedMovieByIdTest {
+
+    }
+
+    @Nested
+    class getWatchedMovieByCodeTest {
+
+    }
+
+    @Nested
+    class createWatchedMovieTest {
+
+    }
+
+    @Nested
+    class updateWatchedMovieByIdTest {
+
+    }
+
+    @Nested
+    class updateWatchedMovieByCodeTest {
+
+    }
+
+    @Nested
+    class deleteWatchedMovieByIdTest {
+
+    }
+
+    @Nested
+    class deleteWatchedMovieByCodeTest {
 
     }
 }
