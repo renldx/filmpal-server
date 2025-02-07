@@ -1,5 +1,7 @@
 package com.renldx.filmpal.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.renldx.filmpal.constants.Formats;
 import com.renldx.filmpal.helpers.MovieHelper;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -14,6 +16,7 @@ public class MovieDto {
     @NotNull
     private String title;
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Formats.DATE_FORMAT)
     private Date release;
 
     public MovieDto() {
