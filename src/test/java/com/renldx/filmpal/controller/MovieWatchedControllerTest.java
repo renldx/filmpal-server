@@ -118,6 +118,41 @@ class MovieWatchedControllerTest {
     @Nested
     class getWatchedMovieByCodeTest {
 
+        @ParameterizedTest
+        @ValueSource(strings = {"TestMovie_2001-01-01"})
+        void getWatchedMovieByCode_Valid_ReturnsWatchedMovie(String code) throws Exception {
+            when(movieWatchedService.getMovie(code)).thenReturn(Optional.of(mockMovie));
+
+            var result = mockMvc.perform(get("/api/watched/movie?code={code}", code))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            var json = result.getResponse().getContentAsString();
+
+            JSONAssert.assertEquals(mockMovieJson, json, true);
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"TestMovie_2100-01-01"})
+        void getWatchedMovieByCode_Invalid_ReturnsWatchedMovie(String code) throws Exception {
+            when(movieWatchedService.getMovie(code)).thenReturn(Optional.empty());
+
+            mockMvc.perform(get("/api/watched/movie?code={code}", code))
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "xyz"})
+        void getWatchedMovieByCode_Malformed_ReturnsWatchedMovie(String code) throws Exception {
+            when(movieWatchedService.getMovie(code)).thenThrow(IllegalArgumentException.class);
+
+            mockMvc.perform(get("/api/watched/movie?code={code}", code))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+
     }
 
     @Nested
