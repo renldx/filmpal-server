@@ -22,6 +22,23 @@ const Genres = () => {
             });
     }, []);
 
+    const getIcon = (genre) => {
+        switch (genre) {
+            case "ACTION":
+                return "⚔️";
+            case "COMEDY":
+                return "🤡";
+            case "DRAMA":
+                return "🎭";
+            case "HORROR":
+                return "👻";
+            case "ROMANCE":
+                return "❤️";
+            default:
+                return "⁉️";
+        }
+    };
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -35,6 +52,7 @@ const Genres = () => {
                     onClick={(event) => pickGenre(event)}
                     size="lg"
                     className="genre">
+                    <span className="icon">{getIcon(genre)}</span>{" "}
                     {genre.toLowerCase()}
                 </Button>
             ))}
