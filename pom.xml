@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>filmpal</name>
     <description>Smart Movie Suggestions</description>
+    <packaging>jar</packaging>
     <url/>
     <licenses>
         <license/>
@@ -114,6 +115,18 @@
                             <version>1.18.36</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.renldx.filmpal.FilmpalApplication</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
