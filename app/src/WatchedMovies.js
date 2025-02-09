@@ -7,6 +7,7 @@ import {
     ModalBody,
     ModalFooter,
     ModalHeader,
+    Spinner,
     Table,
 } from "reactstrap";
 
@@ -58,7 +59,7 @@ const WatchedMovies = () => {
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Spinner></Spinner>;
     }
 
     const movieList = movies.map((movie) => {

@@ -9,7 +9,7 @@ import Genres from "./Genres";
 const Home = () => {
     return (
         <Container>
-            <h2>Movie Suggestions</h2>
+            <h2>Genre Suggestions</h2>
             <h3>Pick a genre:</h3>
             <Genres />
         </Container>

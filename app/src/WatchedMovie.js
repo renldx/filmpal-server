@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
+import {
+    Button,
+    Container,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    Spinner,
+} from "reactstrap";
 
 const WatchedMovie = () => {
     const { code } = useParams();
@@ -106,7 +114,7 @@ const WatchedMovie = () => {
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Spinner></Spinner>;
     }
 
     return (

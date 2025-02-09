@@ -7,6 +7,7 @@ import {
     ModalBody,
     ModalFooter,
     ModalHeader,
+    Spinner,
 } from "reactstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -62,7 +63,7 @@ const SuggestedMovies = () => {
     }, []);
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Spinner></Spinner>;
     }
 
     return (

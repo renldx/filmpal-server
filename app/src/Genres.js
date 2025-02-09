@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "reactstrap";
+import { Button, Spinner } from "reactstrap";
 
 const Genres = () => {
     const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const Genres = () => {
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Spinner></Spinner>;
     }
 
     return (

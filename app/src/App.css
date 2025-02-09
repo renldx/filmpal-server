@@ -13,6 +13,12 @@ h1 {
     margin-left: 1rem;
 }
 
+.spinner-border {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+}
+
 .genre {
     margin: var(--spacer-small);
     text-transform: capitalize;
