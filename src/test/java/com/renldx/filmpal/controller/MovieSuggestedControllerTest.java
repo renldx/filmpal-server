@@ -37,7 +37,7 @@ class MovieSuggestedControllerTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"ACTION"})
-        void getSuggestedMovies_ReturnsSuggestedMovies(String genre) throws Exception {
+        void getSuggestedMovies_Valid_ReturnsSuggestedMovies(String genre) throws Exception {
             when(movieWatchedService.getMovies()).thenReturn(new ArrayList<>());
 
             var mockMovie = new MovieDto("TestMovie", new Date());
@@ -54,6 +54,12 @@ class MovieSuggestedControllerTest {
             var json = result.getResponse().getContentAsString();
 
             assert (!json.isBlank());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"XYZ"})
+        void getSuggestedMovies_Invalid_ReturnsBadRequest(String genre) throws Exception {
+            // TODO
         }
 
     }

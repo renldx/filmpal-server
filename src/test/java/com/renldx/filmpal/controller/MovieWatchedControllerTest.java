@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,8 +21,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,8 +35,9 @@ class MovieWatchedControllerTest {
 
     private static MovieDto mockMovie;
 
-    private static String mockMovieJson;
-    private static String mockMoviesJson;
+    private static String mockMovieJsonInput;
+    private static String mockMovieJsonOutput;
+    private static String mockMoviesJsonOutput;
 
     @MockitoBean
     private MovieWatchedService movieWatchedService;
@@ -49,12 +53,13 @@ class MovieWatchedControllerTest {
         calendar.set(2001, Calendar.JANUARY, 1);
         var mockDate = calendar.getTime();
 
-        mockMovie = new MovieDto("TestMovie", mockDate);
-        mockMovieJson = objectMapper.writeValueAsString(mockMovie);
+        mockMovieJsonInput = "{\"title\":\"TestMovie\",\"release\":\"2001-01-01\"}";
 
-        mockMovies = new ArrayList<MovieDto>();
+        mockMovie = new MovieDto("TestMovie", mockDate);
+        mockMovieJsonOutput = objectMapper.writeValueAsString(mockMovie);
+        mockMovies = new ArrayList<>();
         mockMovies.add(mockMovie);
-        mockMoviesJson = objectMapper.writeValueAsString(mockMovies);
+        mockMoviesJsonOutput = objectMapper.writeValueAsString(mockMovies);
     }
 
     @Nested
@@ -71,7 +76,7 @@ class MovieWatchedControllerTest {
 
             var json = result.getResponse().getContentAsString();
 
-            JSONAssert.assertEquals(mockMoviesJson, json, true);
+            JSONAssert.assertEquals(mockMoviesJsonOutput, json, true);
         }
 
     }
@@ -91,7 +96,7 @@ class MovieWatchedControllerTest {
 
             var json = result.getResponse().getContentAsString();
 
-            JSONAssert.assertEquals(mockMovieJson, json, true);
+            JSONAssert.assertEquals(mockMovieJsonOutput, json, true);
         }
 
         @ParameterizedTest
@@ -130,7 +135,7 @@ class MovieWatchedControllerTest {
 
             var json = result.getResponse().getContentAsString();
 
-            JSONAssert.assertEquals(mockMovieJson, json, true);
+            JSONAssert.assertEquals(mockMovieJsonOutput, json, true);
         }
 
         @ParameterizedTest
@@ -157,6 +162,33 @@ class MovieWatchedControllerTest {
 
     @Nested
     class createWatchedMovieTest {
+
+        @Test
+        void createWatchedMovie_Valid_ReturnsCreated() throws Exception {
+            when(movieWatchedService.createMovie(any())).thenReturn(mockMovie);
+
+            mockMvc.perform(post("/api/watched/movie")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .content(mockMovieJsonInput))
+                    .andDo(print())
+                    .andExpect(status().isCreated());
+        }
+
+        @Test
+        void createWatchedMovie_Invalid_ReturnsBadRequest() throws Exception {
+            mockMvc.perform(post("/api/watched/movie")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .content("\"xyz\""))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void createWatchedMovie_Existing_ReturnsBadRequest() throws Exception {
+            // TODO
+        }
 
     }
 
