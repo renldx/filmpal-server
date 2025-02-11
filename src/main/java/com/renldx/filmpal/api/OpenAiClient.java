@@ -26,7 +26,7 @@ public class OpenAiClient {
         this.objectMapper = objectMapper;
     }
 
-    public OpenAiResponse getResponse(Genres genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException {
+    private String buildUserMessage(Genres genre, Collection<MovieDto> watchedMoviesList) {
         var watchedMovies = "";
 
         if (watchedMoviesList.isEmpty()) {
@@ -35,21 +35,32 @@ public class OpenAiClient {
             watchedMovies = watchedMoviesList.stream().map(MovieDto::getTitle).collect(Collectors.joining(", "));
         }
 
-        var requestUserMessage = String.format("Excluding the following: %s; list the latest top 5 %s movies and their release dates (PST) in ISO 8601 format.", watchedMovies, genre);
+        return String.format("Excluding the following: %s; list the latest top 5 %s movies and their release dates (PST) in ISO 8601 format.", watchedMovies, genre);
+    }
 
-        var chatRequest = ChatRequest.builder()
+    private ChatRequest buildChatRequest(String userMessage) {
+        return ChatRequest.builder()
                 .model("gpt-4o-mini")
                 .message(ChatMessage.SystemMessage.of("You are a movie enthusiast."))
-                .message(ChatMessage.UserMessage.of(requestUserMessage))
+                .message(ChatMessage.UserMessage.of(userMessage))
                 .responseFormat(ResponseFormat.jsonSchema(ResponseFormat.JsonSchema.builder()
                         .name("OpenAiResponse")
                         .schemaClass(OpenAiResponse.class)
                         .build()))
                 .build();
+    }
 
+    private String sendChatRequest(ChatRequest chatRequest) {
         var futureChat = simpleOpenAI.chatCompletions().create(chatRequest);
         var chatResponse = futureChat.join();
-        var jsonResponse = chatResponse.firstContent();
+
+        return chatResponse.firstContent();
+    }
+
+    public OpenAiResponse getChatResponse(Genres genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException {
+        var userMessage = buildUserMessage(genre, watchedMoviesList);
+        var chatRequest = buildChatRequest(userMessage);
+        var jsonResponse = sendChatRequest(chatRequest);
 
         return objectMapper.readValue(jsonResponse, OpenAiResponse.class);
     }
