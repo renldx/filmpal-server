@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -110,12 +111,12 @@ class MovieWatchedControllerTest {
         }
 
         @Test
-        void getWatchedMovieById_Null_ReturnsPreconditionFailed() throws Exception {
+        void getWatchedMovieById_Null_ReturnsNotFound() throws Exception {
             when(movieWatchedService.getMovie(null)).thenReturn(Optional.empty());
 
             mockMvc.perform(get("/api/watched/movie/"))
                     .andDo(print())
-                    .andExpect(status().isPreconditionFailed());
+                    .andExpect(status().isNotFound());
         }
 
     }
@@ -175,19 +176,27 @@ class MovieWatchedControllerTest {
                     .andExpect(status().isCreated());
         }
 
-        @Test
-        void createWatchedMovie_Invalid_ReturnsBadRequest() throws Exception {
+        @ParameterizedTest
+        @ValueSource(strings = {"", "xyz"})
+        void createWatchedMovie_Invalid_ReturnsBadRequest(String content) throws Exception {
             mockMvc.perform(post("/api/watched/movie")
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
-                            .content("\"xyz\""))
+                            .content(content))
                     .andDo(print())
                     .andExpect(status().isBadRequest());
         }
 
         @Test
         void createWatchedMovie_Existing_ReturnsBadRequest() throws Exception {
-            // TODO
+            when(movieWatchedService.createMovie(any())).thenThrow(DataIntegrityViolationException.class);
+
+            mockMvc.perform(post("/api/watched/movie")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .content(mockMovieJsonInput))
+                    .andDo(print())
+                    .andExpect(status().isUnprocessableEntity());
         }
 
     }
