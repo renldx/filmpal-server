@@ -1,6 +1,6 @@
 package com.renldx.filmpal.controller;
 
-import com.renldx.filmpal.constants.ExceptionMessages;
+import com.renldx.filmpal.constant.ExceptionMessages;
 import com.renldx.filmpal.entity.MovieDto;
 import com.renldx.filmpal.service.MovieWatchedService;
 import jakarta.validation.Valid;

@@ -1,8 +1,8 @@
 package com.renldx.filmpal.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.renldx.filmpal.constants.Formats;
-import com.renldx.filmpal.helpers.MovieHelper;
+import com.renldx.filmpal.constant.Formats;
+import com.renldx.filmpal.helper.MovieHelper;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +33,6 @@ public class MovieDto {
     }
 
     public String getCode() {
-        return MovieHelper.GetMovieCode(title, release);
+        return MovieHelper.getMovieCode(title, release);
     }
 }

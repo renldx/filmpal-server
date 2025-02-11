@@ -2,7 +2,7 @@ package com.renldx.filmpal.service;
 
 import com.renldx.filmpal.entity.Movie;
 import com.renldx.filmpal.entity.MovieDto;
-import com.renldx.filmpal.helpers.MovieHelper;
+import com.renldx.filmpal.helper.MovieHelper;
 import com.renldx.filmpal.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +28,9 @@ public class MovieWatchedService {
     }
 
     public Optional<MovieDto> getMovie(String code) throws Exception {
-        var params = MovieHelper.GetMovieTitleAndRelease(code);
+        var params = MovieHelper.getMovieTitleAndRelease(code);
 
-        var release = MovieHelper.GetMovieRelease(params[1]);
+        var release = MovieHelper.getMovieRelease(params[1]);
         var movie = movieRepository.findByTitleAndRelease(params[0], release);
 
         return movie.map(MovieDto::new);
@@ -60,9 +60,9 @@ public class MovieWatchedService {
     }
 
     public Optional<MovieDto> updateMovie(String code, MovieDto movie) throws ParseException {
-        var params = MovieHelper.GetMovieTitleAndRelease(code);
+        var params = MovieHelper.getMovieTitleAndRelease(code);
 
-        var release = MovieHelper.GetMovieRelease(params[1]);
+        var release = MovieHelper.getMovieRelease(params[1]);
         var existingMovie = movieRepository.findByTitleAndRelease(params[0], release);
 
         if (existingMovie.isPresent()) {
@@ -82,9 +82,9 @@ public class MovieWatchedService {
     }
 
     public void deleteMovie(String code) throws ParseException {
-        var params = MovieHelper.GetMovieTitleAndRelease(code);
+        var params = MovieHelper.getMovieTitleAndRelease(code);
 
-        var release = MovieHelper.GetMovieRelease(params[1]);
+        var release = MovieHelper.getMovieRelease(params[1]);
         var movie = movieRepository.findByTitleAndRelease(params[0], release);
 
         movie.ifPresent(value -> deleteMovie(value.getId()));

@@ -1,4 +1,4 @@
-package com.renldx.filmpal.exceptions;
+package com.renldx.filmpal.exception;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

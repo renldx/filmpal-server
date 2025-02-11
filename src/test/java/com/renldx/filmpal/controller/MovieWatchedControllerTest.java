@@ -51,7 +51,7 @@ class MovieWatchedControllerTest {
     static void init() throws JsonProcessingException {
         var objectMapper = new ObjectMapper();
 
-        Calendar calendar = Calendar.getInstance();
+        var calendar = Calendar.getInstance();
         calendar.set(2001, Calendar.JANUARY, 1);
         var mockDate = calendar.getTime();
 

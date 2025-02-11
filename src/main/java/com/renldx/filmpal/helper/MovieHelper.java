@@ -1,7 +1,7 @@
-package com.renldx.filmpal.helpers;
+package com.renldx.filmpal.helper;
 
-import com.renldx.filmpal.constants.ExceptionMessages;
-import com.renldx.filmpal.constants.Formats;
+import com.renldx.filmpal.constant.ExceptionMessages;
+import com.renldx.filmpal.constant.Formats;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -10,14 +10,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MovieHelper {
-    public static String GetMovieCode(String title, Date release) {
+    public static String getMovieCode(String title, Date release) {
         var encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
         var simpleDate = new SimpleDateFormat(Formats.DATE_FORMAT).format(release);
 
         return String.format("%s_%s", encodedTitle, simpleDate);
     }
 
-    public static String[] GetMovieTitleAndRelease(String code) {
+    public static String[] getMovieTitleAndRelease(String code) {
         var result = code.split("_");
 
         if (result.length != 2) {
@@ -27,7 +27,7 @@ public class MovieHelper {
         return result;
     }
 
-    public static Date GetMovieRelease(String release) throws ParseException {
+    public static Date getMovieRelease(String release) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat(Formats.DATE_FORMAT);
 
         return formatter.parse(release);

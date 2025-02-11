@@ -1,4 +1,4 @@
-package com.renldx.filmpal.constants;
+package com.renldx.filmpal.constant;
 
 public class Formats {
 
