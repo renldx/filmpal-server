@@ -59,7 +59,9 @@ class MovieSuggestedControllerTest {
         @ParameterizedTest
         @ValueSource(strings = {"XYZ"})
         void getSuggestedMovies_Invalid_ReturnsBadRequest(String genre) throws Exception {
-            // TODO
+            mockMvc.perform(get("/api/suggested/" + genre))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
         }
 
     }
