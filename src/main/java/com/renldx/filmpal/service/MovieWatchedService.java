@@ -77,6 +77,10 @@ public class MovieWatchedService {
         return Optional.empty();
     }
 
+    public void deleteMovies() {
+        movieRepository.deleteAll();
+    }
+
     public void deleteMovie(int id) {
         movieRepository.deleteById(id);
     }
