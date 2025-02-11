@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -50,15 +51,13 @@ class MovieWatchedControllerTest {
     static void init() throws JsonProcessingException {
         var objectMapper = new ObjectMapper();
 
-        var mockTitle = "TestMovie";
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(2001, Calendar.JANUARY, 1);
         var mockDate = calendar.getTime();
 
         mockMovieJsonInput = "{\"title\":\"TestMovie\",\"release\":\"2001-01-01\"}";
 
-        mockMovie = new MovieDto(mockTitle, mockDate);
+        mockMovie = new MovieDto("TestMovie", mockDate);
         mockMovieJsonOutput = objectMapper.writeValueAsString(mockMovie);
         mockMovies = new ArrayList<>();
         mockMovies.add(mockMovie);
@@ -208,7 +207,7 @@ class MovieWatchedControllerTest {
 
         @ParameterizedTest
         @ValueSource(ints = {1})
-        void updateWatchedMovie_Valid_ReturnsOk(int id) throws Exception {
+        void updateWatchedMovieById_Valid_ReturnsOk(int id) throws Exception {
             when(movieWatchedService.updateMovie(eq(id), any())).thenReturn(Optional.ofNullable(mockMovie));
 
             mockMvc.perform(put("/api/watched/movie/{id}", id)
@@ -221,7 +220,9 @@ class MovieWatchedControllerTest {
 
         @ParameterizedTest
         @ValueSource(ints = {0})
-        void updateWatchedMovie_Invalid_Returns(int id) throws Exception {
+        void updateWatchedMovieById_Invalid_ReturnsNotFound(int id) throws Exception {
+            when(movieWatchedService.updateMovie(eq(id), any())).thenReturn(Optional.empty());
+
             mockMvc.perform(put("/api/watched/movie/{id}", id)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
@@ -232,7 +233,7 @@ class MovieWatchedControllerTest {
 
         @ParameterizedTest
         @ValueSource(ints = {1})
-        void updateWatchedMovie_Malformed_Returns(int id) throws Exception {
+        void updateWatchedMovieById_Malformed_ReturnsBadRequest(int id) throws Exception {
             mockMvc.perform(put("/api/watched/movie/{id}", id)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
@@ -246,15 +247,102 @@ class MovieWatchedControllerTest {
     @Nested
     class updateWatchedMovieByCodeTest {
 
+        @ParameterizedTest
+        @ValueSource(strings = {"TestMovie_2001-01-01"})
+        void updateWatchedMovieByCode_Valid_ReturnsOk(String code) throws Exception {
+            when(movieWatchedService.updateMovie(eq(code), any())).thenReturn(Optional.ofNullable(mockMovie));
+
+            mockMvc.perform(put("/api/watched/movie?code={code}", code)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .content(mockMovieJsonInput))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"TestMovie_2100-01-01"})
+        void updateWatchedMovieByCode_Invalid_ReturnsNotFound(String code) throws Exception {
+            when(movieWatchedService.updateMovie(eq(code), any())).thenReturn(Optional.empty());
+
+            mockMvc.perform(put("/api/watched/movie?code={code}", code)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .content(mockMovieJsonInput))
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "xyz"})
+        void updateWatchedMovieByCode_Malformed_Param_ReturnsBadRequest(String code) throws Exception {
+            when(movieWatchedService.updateMovie(eq(code), any())).thenThrow(IllegalArgumentException.class);
+
+            mockMvc.perform(put("/api/watched/movie?code={code}", code)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .content(mockMovieJsonInput))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "xyz"})
+        void updateWatchedMovieByCode_Malformed_Body_ReturnsBadRequest(String content) throws Exception {
+            mockMvc.perform(put("/api/watched/movie?code={code}", "TestMovie_2001-01-01")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .content(content))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+
     }
 
     @Nested
     class deleteWatchedMovieByIdTest {
 
+        @ParameterizedTest
+        @ValueSource(ints = {0, 1})
+        void deleteWatchedMovieById_ReturnsOk(int id) throws Exception {
+            Mockito.doNothing().when(movieWatchedService).deleteMovie(id);
+
+            mockMvc.perform(delete("/api/watched/movie/{id}", id))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void deleteWatchedMovieById_Null_ReturnsNotFound() throws Exception {
+            mockMvc.perform(delete("/api/watched/movie/"))
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+
     }
 
     @Nested
     class deleteWatchedMovieByCodeTest {
+
+        @ParameterizedTest
+        @ValueSource(strings = {"TestMovie_2001-01-01", "TestMovie_2100-01-01"})
+        void deleteWatchedMovieByCode_ReturnsOk(String code) throws Exception {
+            Mockito.doNothing().when(movieWatchedService).deleteMovie(code);
+
+            mockMvc.perform(delete("/api/watched/movie?code={code}", code))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "xyz"})
+        void deleteWatchedMovieByCode_Malformed_ReturnsBadRequest(String code) throws Exception {
+            Mockito.doThrow(IllegalArgumentException.class).when(movieWatchedService).deleteMovie(code);
+
+            mockMvc.perform(delete("/api/watched/movie?code={code}", code))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
 
     }
 }
