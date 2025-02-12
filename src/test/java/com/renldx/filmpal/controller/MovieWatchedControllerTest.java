@@ -18,9 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -59,8 +59,7 @@ class MovieWatchedControllerTest {
 
         mockMovie = new MovieDto("TestMovie", mockDate);
         mockMovieJsonOutput = objectMapper.writeValueAsString(mockMovie);
-        mockMovies = new ArrayList<>();
-        mockMovies.add(mockMovie);
+        mockMovies = List.of(mockMovie);
         mockMoviesJsonOutput = objectMapper.writeValueAsString(mockMovies);
     }
 
