@@ -91,6 +91,13 @@
             <groupId>io.github.sashirestela</groupId>
             <artifactId>simple-openai</artifactId>
             <version>3.17.2</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
