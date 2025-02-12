@@ -4,6 +4,7 @@ import com.renldx.filmpal.entity.Movie;
 import com.renldx.filmpal.entity.MovieDto;
 import com.renldx.filmpal.helper.MovieHelper;
 import com.renldx.filmpal.repository.MovieRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -33,15 +34,23 @@ public class MovieWatchedService {
         var release = MovieHelper.getMovieRelease(params[1]);
         var movie = movieRepository.findByTitleAndRelease(params[0], release);
 
-        return movie.map(MovieDto::new);
+        if (movie.isPresent()) {
+            var movieDto = new MovieDto();
+            BeanUtils.copyProperties(movie.get(), movieDto);
+
+            return Optional.of(movieDto);
+        } else {
+            return Optional.empty();
+        }
     }
 
-    public MovieDto createMovie(MovieDto movie) {
-        var newMovie = new Movie(movie.getTitle(), movie.getRelease());
+    public MovieDto createMovie(MovieDto movieDto) {
+        var movie = new Movie();
+        BeanUtils.copyProperties(movieDto, movie);
 
-        movieRepository.save(newMovie);
+        movieRepository.save(movie);
 
-        return movie;
+        return movieDto;
     }
 
     public Optional<MovieDto> updateMovie(int id, MovieDto movie) {
@@ -75,10 +84,6 @@ public class MovieWatchedService {
         }
 
         return Optional.empty();
-    }
-
-    public void deleteMovies() {
-        movieRepository.deleteAll();
     }
 
     public void deleteMovie(int id) {

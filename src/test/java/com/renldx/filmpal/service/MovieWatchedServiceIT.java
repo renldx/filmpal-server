@@ -1,10 +1,7 @@
 package com.renldx.filmpal.service;
 
 import com.renldx.filmpal.entity.MovieDto;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -14,46 +11,116 @@ import org.testcontainers.oracle.OracleContainer;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MovieWatchedServiceIT {
 
-    static OracleContainer oracle = new OracleContainer(
+    private final static int movieId = 1;
+
+    static OracleContainer oracleContainer = new OracleContainer(
             "gvenzl/oracle-free"
     );
+
+    private static String movieCode;
 
     @Autowired
     MovieWatchedService movieWatchedService;
 
     @BeforeAll
     static void beforeAll() {
-        oracle.start();
+        oracleContainer.start();
     }
 
     @AfterAll
     static void afterAll() {
-        oracle.stop();
+        oracleContainer.stop();
     }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", oracle::getJdbcUrl);
-        registry.add("spring.datasource.username", oracle::getUsername);
-        registry.add("spring.datasource.password", oracle::getPassword);
-    }
-
-    @BeforeEach
-    void setUp() {
-        movieWatchedService.deleteMovies();
+        registry.add("spring.datasource.url", oracleContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", oracleContainer::getUsername);
+        registry.add("spring.datasource.password", oracleContainer::getPassword);
     }
 
     @Test
-    void createAndGetMovieById_ReturnsMovie() {
+    @Order(1)
+    void createMovie_ReturnsMovie() {
         var movieInput = new MovieDto("TestMovie", new Date());
-        movieWatchedService.createMovie(movieInput);
+        var movieOutput = movieWatchedService.createMovie(movieInput);
 
-        var movieOutput = movieWatchedService.getMovie(1);
+        movieCode = movieOutput.getCode();
         assertThat(movieOutput).isNotNull();
+    }
+
+    @Test
+    @Order(2)
+    void getMovies_ReturnsMovies() {
+        var movies = movieWatchedService.getMovies();
+        assertThat(movies).isNotEmpty();
+    }
+
+    @Test
+    @Order(2)
+    void getMovieById_ReturnsMovie() {
+        var movie = movieWatchedService.getMovie(movieId);
+        assertThat(movie).isNotNull();
+    }
+
+    @Test
+    @Order(2)
+    void getMovieByCode_ReturnsMovie() throws Exception {
+        var movie = movieWatchedService.getMovie(movieCode);
+        assertThat(movie).isNotNull();
+    }
+
+    @Test
+    @Order(3)
+    void updateMovieById_UpdatesMovie() {
+        var movie = movieWatchedService.getMovie(movieId);
+
+        if (movie.isEmpty()) {
+            fail();
+        } else {
+            movie.get().setTitle("TestMovieUpdate");
+            var updatedMovie = movieWatchedService.updateMovie(movieId, movie.get());
+
+            if (updatedMovie.isEmpty()) {
+                fail();
+            } else {
+                movieCode = updatedMovie.get().getCode();
+                assertThat(updatedMovie.get().getTitle()).isEqualTo("TestMovieUpdate");
+            }
+        }
+    }
+
+    @Test
+    @Order(4)
+    void updateMovieByCode_UpdatesMovie() throws Exception {
+        var movie = movieWatchedService.getMovie(movieCode);
+
+        if (movie.isEmpty()) {
+            fail();
+        } else {
+            movie.get().setTitle("TestMovieUpdateAgain");
+            var updatedMovie = movieWatchedService.updateMovie(movieId, movie.get());
+
+            if (updatedMovie.isEmpty()) {
+                fail();
+            } else {
+                movieCode = updatedMovie.get().getCode();
+                assertThat(updatedMovie.get().getTitle()).isEqualTo("TestMovieUpdateAgain");
+            }
+        }
+    }
+
+    @Test
+    @Order(5)
+    void deleteMovieByCode_DoesntThrowException() {
+        assertDoesNotThrow(() -> movieWatchedService.deleteMovie(movieCode));
     }
 
 }

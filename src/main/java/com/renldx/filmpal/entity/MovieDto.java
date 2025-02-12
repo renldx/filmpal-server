@@ -27,11 +27,6 @@ public class MovieDto {
         this.release = release;
     }
 
-    public MovieDto(Movie movie) {
-        this.title = movie.getTitle();
-        this.release = movie.getRelease();
-    }
-
     public String getCode() {
         return MovieHelper.getMovieCode(title, release);
     }
