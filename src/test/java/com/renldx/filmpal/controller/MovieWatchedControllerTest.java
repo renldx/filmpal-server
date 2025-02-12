@@ -48,7 +48,7 @@ class MovieWatchedControllerTest {
     private MockMvc mockMvc;
 
     @BeforeAll
-    static void init() throws JsonProcessingException {
+    static void beforeAll() throws JsonProcessingException {
         var objectMapper = new ObjectMapper();
 
         var calendar = Calendar.getInstance();

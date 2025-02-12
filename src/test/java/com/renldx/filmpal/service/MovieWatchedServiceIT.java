@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MovieWatchedServiceIT {
 
@@ -27,7 +27,7 @@ public class MovieWatchedServiceIT {
     private static String movieCode;
 
     @Autowired
-    MovieWatchedService movieWatchedService;
+    private MovieWatchedService movieWatchedService;
 
     @BeforeAll
     static void beforeAll() {
