@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.renldx</groupId>
-    <artifactId>filmpal</artifactId>
+    <artifactId>filmpal-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>filmpal</name>
+    <name>filmpal-server</name>
     <description>Smart Movie Suggestions</description>
     <packaging>jar</packaging>
     <url/>
@@ -122,7 +122,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.renldx.filmpal.FilmpalApplication</mainClass>
+                            <mainClass>com.renldx.filmpal.server.FilmpalServerApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
