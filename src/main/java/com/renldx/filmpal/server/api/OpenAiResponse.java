@@ -14,5 +14,6 @@ public class OpenAiResponse {
     public static class MovieResponse {
         public String title;
         public Date release;
+        public String imdbId;
     }
 }

@@ -18,6 +18,7 @@ public class MovieDto {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Formats.DATE_FORMAT)
     private Date release;
+    private String imdbId;
 
     public MovieDto() {
     }
@@ -25,6 +26,12 @@ public class MovieDto {
     public MovieDto(String title, Date release) {
         this.title = title;
         this.release = release;
+    }
+
+    public MovieDto(String title, Date release, String imdbId) {
+        this.title = title;
+        this.release = release;
+        this.imdbId = imdbId;
     }
 
     public String getCode() {
