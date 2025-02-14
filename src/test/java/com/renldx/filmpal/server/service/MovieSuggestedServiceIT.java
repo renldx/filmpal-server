@@ -25,4 +25,5 @@ public class MovieSuggestedServiceIT {
         var suggestedMovies = movieSuggestedService.getMovies(Genres.ACTION, Collections.emptyList());
         assertFalse(suggestedMovies.isEmpty());
     }
+    
 }
