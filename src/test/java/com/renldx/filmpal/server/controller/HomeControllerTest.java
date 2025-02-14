@@ -2,7 +2,7 @@ package com.renldx.filmpal.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.renldx.filmpal.server.entity.Genres;
+import com.renldx.filmpal.server.model.Genres;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

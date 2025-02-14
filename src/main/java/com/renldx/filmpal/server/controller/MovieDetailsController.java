@@ -1,13 +1,17 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.entity.MovieDetails;
+import com.renldx.filmpal.server.exception.ApiClientException;
+import com.renldx.filmpal.server.model.MovieDetails;
 import com.renldx.filmpal.server.service.MovieDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/details/")
@@ -21,7 +25,14 @@ public class MovieDetailsController {
     }
 
     @GetMapping("/movie")
-    public MovieDetails getMovieDetails(@RequestParam(value = "imdbId") String imdbId) {
-        return movieDetailsService.getMovieDetails(imdbId);
+    public ResponseEntity<MovieDetails> getMovieDetails(@RequestParam(value = "imdbId") String imdbId) throws ApiClientException {
+        var movieDetails = movieDetailsService.getMovieDetails(imdbId);
+
+        if (Objects.equals(movieDetails.response(), "False")) {
+            return ResponseEntity.badRequest().body(movieDetails);
+        } else {
+            return ResponseEntity.ok(movieDetails);
+        }
     }
+
 }

@@ -1,7 +1,7 @@
 package com.renldx.filmpal.server.controller;
 
 import com.renldx.filmpal.server.constant.ExceptionMessages;
-import com.renldx.filmpal.server.entity.MovieDto;
+import com.renldx.filmpal.server.model.MovieDto;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -108,4 +108,5 @@ public class MovieWatchedController {
 
         return ResponseEntity.ok().build();
     }
+
 }

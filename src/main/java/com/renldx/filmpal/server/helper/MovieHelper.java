@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MovieHelper {
+
     public static String getMovieCode(String title, Date release) {
         var encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
         var simpleDate = new SimpleDateFormat(Formats.DATE_FORMAT).format(release);
@@ -32,4 +33,5 @@ public class MovieHelper {
 
         return formatter.parse(release);
     }
+
 }

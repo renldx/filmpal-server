@@ -2,7 +2,7 @@ package com.renldx.filmpal.server.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.renldx.filmpal.server.entity.MovieDto;
+import com.renldx.filmpal.server.model.MovieDto;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;

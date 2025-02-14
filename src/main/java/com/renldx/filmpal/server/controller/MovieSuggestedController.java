@@ -1,7 +1,7 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.entity.Genres;
-import com.renldx.filmpal.server.entity.MovieDto;
+import com.renldx.filmpal.server.model.Genres;
+import com.renldx.filmpal.server.model.MovieDto;
 import com.renldx.filmpal.server.service.MovieSuggestedService;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import org.slf4j.Logger;
@@ -31,4 +31,5 @@ public class MovieSuggestedController {
         var watchedMovies = movieWatchedService.getMovies();
         return movieSuggestedService.getMovies(genre, watchedMovies);
     }
+
 }

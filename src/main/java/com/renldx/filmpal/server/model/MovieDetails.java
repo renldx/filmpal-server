@@ -1,4 +1,4 @@
-package com.renldx.filmpal.server.entity;
+package com.renldx.filmpal.server.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -30,7 +30,8 @@ public record MovieDetails(
         String boxOffice,
         String production,
         String website,
-        String response
+        String response,
+        String error
 ) {
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
     public record Rating(

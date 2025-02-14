@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.service;
 
-import com.renldx.filmpal.server.entity.MovieDto;
+import com.renldx.filmpal.server.model.MovieDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -122,5 +122,5 @@ public class MovieWatchedServiceIT {
     void deleteMovieByCode_DoesntThrowException() {
         assertDoesNotThrow(() -> movieWatchedService.deleteMovie(movieCode));
     }
-    
+
 }

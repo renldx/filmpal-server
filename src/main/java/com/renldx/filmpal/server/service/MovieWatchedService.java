@@ -1,8 +1,8 @@
 package com.renldx.filmpal.server.service;
 
-import com.renldx.filmpal.server.entity.Movie;
-import com.renldx.filmpal.server.entity.MovieDto;
 import com.renldx.filmpal.server.helper.MovieHelper;
+import com.renldx.filmpal.server.model.Movie;
+import com.renldx.filmpal.server.model.MovieDto;
 import com.renldx.filmpal.server.repository.MovieRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MovieWatchedService {
+
     private final MovieRepository movieRepository;
 
     public MovieWatchedService(MovieRepository movieRepository) {
@@ -98,4 +99,5 @@ public class MovieWatchedService {
 
         movie.ifPresent(value -> deleteMovie(value.getId()));
     }
+
 }

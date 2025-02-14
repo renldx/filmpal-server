@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.entity.Genres;
+import com.renldx.filmpal.server.model.Genres;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,4 +20,5 @@ public class HomeController {
     public Collection<Genres> getGenres() {
         return List.of(Genres.values());
     }
+
 }

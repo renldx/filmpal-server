@@ -2,8 +2,9 @@ package com.renldx.filmpal.server.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.renldx.filmpal.server.entity.Genres;
-import com.renldx.filmpal.server.entity.MovieDto;
+import com.renldx.filmpal.server.exception.ApiClientException;
+import com.renldx.filmpal.server.model.Genres;
+import com.renldx.filmpal.server.model.MovieDto;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
@@ -11,10 +12,13 @@ import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 @Service
 public class OpenAiClient {
+
     private final SimpleOpenAI simpleOpenAI;
     private final ObjectMapper objectMapper;
 
@@ -50,18 +54,28 @@ public class OpenAiClient {
                 .build();
     }
 
-    private String sendChatRequest(ChatRequest chatRequest) {
+    private String sendChatRequest(ChatRequest chatRequest) throws ApiClientException {
         var futureChat = simpleOpenAI.chatCompletions().create(chatRequest);
-        var chatResponse = futureChat.join();
 
-        return chatResponse.firstContent();
+        try {
+            var chatResponse = futureChat.join();
+            return chatResponse.firstContent();
+        } catch (CompletionException e) {
+            throw new ApiClientException(e.getMessage());
+        }
     }
 
-    public OpenAiResponse getChatResponse(Genres genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException {
+    public OpenAiResponse getChatResponse(Genres genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
         var userMessage = buildUserMessage(genre, watchedMoviesList);
         var chatRequest = buildChatRequest(userMessage);
         var jsonResponse = sendChatRequest(chatRequest);
 
         return objectMapper.readValue(jsonResponse, OpenAiResponse.class);
     }
+
+    public record OpenAiResponse(Collection<OpenAiResponseMovie> movies) {
+        public record OpenAiResponseMovie(String title, Date release, String imdbId) {
+        }
+    }
+    
 }

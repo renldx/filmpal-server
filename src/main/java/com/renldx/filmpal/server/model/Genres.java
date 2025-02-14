@@ -1,4 +1,4 @@
-package com.renldx.filmpal.server.entity;
+package com.renldx.filmpal.server.model;
 
 public enum Genres {
     ACTION,

@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.entity.MovieDetails;
+import com.renldx.filmpal.server.model.MovieDetails;
 import com.renldx.filmpal.server.service.MovieDetailsService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
@@ -40,6 +40,7 @@ class MovieDetailsControllerTest {
         @ValueSource(strings = {"tt1234567", "tt12345678"})
         void getMovieDetails_Valid_ReturnsMovieDetails(String imdbId) throws Exception {
             when(movieDetailsService.getMovieDetails(imdbId)).thenReturn(mockMovieDetails);
+            when(mockMovieDetails.response()).thenReturn("True");
 
             mockMvc.perform(get("/api/details/movie?imdbId={imdbId}", imdbId))
                     .andDo(print())
@@ -47,15 +48,14 @@ class MovieDetailsControllerTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"tt0000000", "tt00000000"})
-        void getMovieDetails_Invalid_ReturnsNotFound() throws Exception {
-            // TODO
-        }
+        @ValueSource(strings = {"", "xyz", "tt0000000", "tt00000000"})
+        void getMovieDetails_Invalid_ReturnsNotFound(String imdbId) throws Exception {
+            when(movieDetailsService.getMovieDetails(imdbId)).thenReturn(mockMovieDetails);
+            when(mockMovieDetails.response()).thenReturn("False");
 
-        @ParameterizedTest
-        @ValueSource(strings = {"", "xyz"})
-        void getMovieDetails_Malformed_ReturnsBadRequest() throws Exception {
-            // TODO
+            mockMvc.perform(get("/api/details/movie?imdbId={imdbId}", imdbId))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
         }
 
     }

@@ -1,4 +1,4 @@
-package com.renldx.filmpal.server.entity;
+package com.renldx.filmpal.server.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.renldx.filmpal.server.constant.Formats;
@@ -37,4 +37,5 @@ public class MovieDto {
     public String getCode() {
         return MovieHelper.getMovieCode(title, release);
     }
+    
 }

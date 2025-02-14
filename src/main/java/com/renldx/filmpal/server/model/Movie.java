@@ -1,4 +1,4 @@
-package com.renldx.filmpal.server.entity;
+package com.renldx.filmpal.server.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,4 +31,5 @@ public class Movie {
         this.title = title;
         this.release = release;
     }
+    
 }
