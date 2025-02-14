@@ -2,7 +2,7 @@ package com.renldx.filmpal.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.renldx.filmpal.server.model.Genres;
+import com.renldx.filmpal.server.model.Genre;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class HomeControllerTest {
     private ObjectMapper objectMapper;
 
     @Nested
-    class getGenresTest {
+    class getGenreTest {
 
         @Test
         void getGenres_ReturnsGenres() throws Exception {
@@ -38,10 +38,10 @@ class HomeControllerTest {
                     .andReturn();
 
             var json = result.getResponse().getContentAsString();
-            Genres[] genres = objectMapper.readValue(json, new TypeReference<>() {
+            Genre[] genres = objectMapper.readValue(json, new TypeReference<>() {
             });
 
-            assertIterableEquals(Arrays.asList(genres), Arrays.asList(Genres.values()));
+            assertIterableEquals(Arrays.asList(genres), Arrays.asList(Genre.values()));
         }
 
     }

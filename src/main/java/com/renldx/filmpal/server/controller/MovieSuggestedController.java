@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.model.Genres;
+import com.renldx.filmpal.server.model.Genre;
 import com.renldx.filmpal.server.model.MovieDto;
 import com.renldx.filmpal.server.service.MovieSuggestedService;
 import com.renldx.filmpal.server.service.MovieWatchedService;
@@ -27,7 +27,7 @@ public class MovieSuggestedController {
     }
 
     @GetMapping("/{genre}")
-    public Collection<MovieDto> getSuggestedMovies(@PathVariable Genres genre) throws Exception {
+    public Collection<MovieDto> getSuggestedMovies(@PathVariable Genre genre) throws Exception {
         var watchedMovies = movieWatchedService.getMovies();
         return movieSuggestedService.getMovies(genre, watchedMovies);
     }

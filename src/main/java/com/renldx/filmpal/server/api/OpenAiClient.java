@@ -3,7 +3,7 @@ package com.renldx.filmpal.server.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.renldx.filmpal.server.exception.ApiClientException;
-import com.renldx.filmpal.server.model.Genres;
+import com.renldx.filmpal.server.model.Genre;
 import com.renldx.filmpal.server.model.MovieDto;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
@@ -30,7 +30,7 @@ public class OpenAiClient {
         this.objectMapper = objectMapper;
     }
 
-    private String buildUserMessage(Genres genre, Collection<MovieDto> watchedMoviesList) {
+    private String buildUserMessage(Genre genre, Collection<MovieDto> watchedMoviesList) {
         var watchedMovies = "";
 
         if (watchedMoviesList.isEmpty()) {
@@ -65,7 +65,7 @@ public class OpenAiClient {
         }
     }
 
-    public OpenAiResponse getChatResponse(Genres genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
+    public OpenAiResponse getChatResponse(Genre genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
         var userMessage = buildUserMessage(genre, watchedMoviesList);
         var chatRequest = buildChatRequest(userMessage);
         var jsonResponse = sendChatRequest(chatRequest);
@@ -77,5 +77,5 @@ public class OpenAiClient {
         public record OpenAiResponseMovie(String title, Date release, String imdbId) {
         }
     }
-    
+
 }
