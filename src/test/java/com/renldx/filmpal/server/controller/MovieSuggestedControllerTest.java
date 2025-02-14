@@ -4,6 +4,7 @@ import com.renldx.filmpal.server.entity.MovieDto;
 import com.renldx.filmpal.server.service.MovieSuggestedService;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MovieSuggestedController.class)
@@ -41,28 +44,30 @@ class MovieSuggestedControllerTest {
             when(movieWatchedService.getMovies()).thenReturn(new ArrayList<>());
 
             var mockMovie = new MovieDto("TestMovie", new Date());
-            var mockSuggestedMovies = new ArrayList<MovieDto>();
-            mockSuggestedMovies.add(mockMovie);
 
-            when(movieSuggestedService.getMovies(any(), any())).thenReturn(mockSuggestedMovies);
+            when(movieSuggestedService.getMovies(any(), any())).thenReturn(List.of(mockMovie));
 
-            var result = mockMvc.perform(get("/api/suggested/" + genre))
+            mockMvc.perform(get("/api/suggested/{genre}", genre))
                     .andDo(print())
                     .andExpect(status().isOk())
-                    .andReturn();
-
-            var json = result.getResponse().getContentAsString();
-
-            assert (!json.isBlank());
+                    .andExpect(jsonPath("$").isNotEmpty());
         }
 
         @ParameterizedTest
         @ValueSource(strings = {"XYZ"})
         void getSuggestedMovies_Invalid_ReturnsBadRequest(String genre) throws Exception {
-            mockMvc.perform(get("/api/suggested/" + genre))
+            mockMvc.perform(get("/api/suggested/{genre}", genre))
                     .andDo(print())
                     .andExpect(status().isBadRequest());
         }
 
+        @Test
+        void getSuggestedMovies_Null_ReturnsNotFound() throws Exception {
+            mockMvc.perform(get("/api/suggested/"))
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+
     }
+
 }

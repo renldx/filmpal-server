@@ -32,6 +32,7 @@ public record MovieDetails(
         String website,
         String response
 ) {
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
     public record Rating(
             String source,
             String value

@@ -9,6 +9,7 @@ import org.springframework.web.client.RestClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MovieDetailsServiceIT {
+
     private static MovieDetailsService movieDetailsService;
 
     @BeforeAll

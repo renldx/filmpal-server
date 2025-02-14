@@ -122,5 +122,5 @@ public class MovieWatchedServiceIT {
     void deleteMovieByCode_DoesntThrowException() {
         assertDoesNotThrow(() -> movieWatchedService.deleteMovie(movieCode));
     }
-
+    
 }

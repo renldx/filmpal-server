@@ -344,4 +344,5 @@ class MovieWatchedControllerTest {
         }
 
     }
+
 }
