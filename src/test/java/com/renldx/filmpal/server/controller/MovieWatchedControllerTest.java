@@ -2,6 +2,7 @@ package com.renldx.filmpal.server.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.renldx.filmpal.server.model.MovieDto;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Calendar;
+import java.time.Year;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -50,15 +51,16 @@ class MovieWatchedControllerTest {
     @BeforeAll
     static void beforeAll() throws JsonProcessingException {
         var objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
-        var calendar = Calendar.getInstance();
-        calendar.set(2001, Calendar.JANUARY, 1);
-        var mockDate = calendar.getTime();
+        String mockTitle = "TestMovie";
+        Year mockRelease = Year.parse("2001");
 
-        mockMovieJsonInput = "{\"title\":\"TestMovie\",\"release\":\"2001-01-01\"}";
+        mockMovieJsonInput = String.format("{\"title\":\"%s\",\"release\":\"%s\"}", mockTitle, mockRelease);
 
-        mockMovie = new MovieDto("TestMovie", mockDate);
+        mockMovie = new MovieDto(mockTitle, mockRelease);
         mockMovieJsonOutput = objectMapper.writeValueAsString(mockMovie);
+
         mockMovies = List.of(mockMovie);
         mockMoviesJsonOutput = objectMapper.writeValueAsString(mockMovies);
     }
@@ -247,7 +249,7 @@ class MovieWatchedControllerTest {
     class updateWatchedMovieByCodeTest {
 
         @ParameterizedTest
-        @ValueSource(strings = {"TestMovie_2001-01-01"})
+        @ValueSource(strings = {"TestMovie_2001"})
         void updateWatchedMovieByCode_Valid_ReturnsOk(String code) throws Exception {
             when(movieWatchedService.updateMovie(eq(code), any())).thenReturn(Optional.ofNullable(mockMovie));
 
@@ -260,7 +262,7 @@ class MovieWatchedControllerTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"TestMovie_2100-01-01"})
+        @ValueSource(strings = {"TestMovie_2100"})
         void updateWatchedMovieByCode_Invalid_ReturnsNotFound(String code) throws Exception {
             when(movieWatchedService.updateMovie(eq(code), any())).thenReturn(Optional.empty());
 

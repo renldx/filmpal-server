@@ -8,7 +8,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.oracle.OracleContainer;
 
-import java.util.Date;
+import java.time.Year;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -49,7 +49,7 @@ public class MovieWatchedServiceIT {
     @Test
     @Order(1)
     void createMovie_ReturnsMovie() {
-        var movieInput = new MovieDto("TestMovie", new Date());
+        var movieInput = new MovieDto("TestMovie", Year.parse("2001"));
         var movieOutput = movieWatchedService.createMovie(movieInput);
 
         movieCode = movieOutput.getCode();
@@ -72,7 +72,7 @@ public class MovieWatchedServiceIT {
 
     @Test
     @Order(2)
-    void getMovieByCode_ReturnsMovie() throws Exception {
+    void getMovieByCode_ReturnsMovie() {
         var movie = movieWatchedService.getMovie(movieCode);
         assertThat(movie).isNotNull();
     }
@@ -99,7 +99,7 @@ public class MovieWatchedServiceIT {
 
     @Test
     @Order(4)
-    void updateMovieByCode_UpdatesMovie() throws Exception {
+    void updateMovieByCode_UpdatesMovie() {
         var movie = movieWatchedService.getMovie(movieCode);
 
         if (movie.isEmpty()) {

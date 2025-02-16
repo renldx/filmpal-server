@@ -21,7 +21,7 @@ public class MovieSuggestedService {
 
     public Collection<MovieDto> getMovies(Genre genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
         var response = openAiClient.getChatResponse(genre, watchedMoviesList);
-        return response.movies().stream().map(m -> new MovieDto(m.title(), m.release(), m.imdbId())).collect(Collectors.toList());
+        return response.movies().stream().map(m -> new MovieDto(m.title(), m.release())).collect(Collectors.toList());
     }
 
 }

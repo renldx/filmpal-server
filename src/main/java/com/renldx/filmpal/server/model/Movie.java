@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.Year;
 
 @Getter
 @Entity
@@ -21,15 +21,14 @@ public class Movie {
 
     @Setter
     @Column(name = "RELEASE", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date release;
+    private Year release;
 
     public Movie() {
     }
 
-    public Movie(String title, Date release) {
+    public Movie(String title, Year release) {
         this.title = title;
         this.release = release;
     }
-    
+
 }

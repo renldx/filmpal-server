@@ -11,8 +11,8 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
 import java.util.Collection;
-import java.util.Date;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
@@ -74,7 +74,7 @@ public class OpenAiClient {
     }
 
     public record OpenAiResponse(Collection<OpenAiResponseMovie> movies) {
-        public record OpenAiResponseMovie(String title, Date release, String imdbId) {
+        public record OpenAiResponseMovie(String title, Year release) {
         }
     }
 

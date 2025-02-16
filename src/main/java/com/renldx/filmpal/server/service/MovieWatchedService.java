@@ -7,7 +7,6 @@ import com.renldx.filmpal.server.repository.MovieRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class MovieWatchedService {
         return movieRepository.findById(id).map(m -> new MovieDto(m.getTitle(), m.getRelease()));
     }
 
-    public Optional<MovieDto> getMovie(String code) throws Exception {
+    public Optional<MovieDto> getMovie(String code) {
         var params = MovieHelper.getMovieTitleAndRelease(code);
 
         var release = MovieHelper.getMovieRelease(params[1]);
@@ -69,7 +68,7 @@ public class MovieWatchedService {
         return Optional.empty();
     }
 
-    public Optional<MovieDto> updateMovie(String code, MovieDto movie) throws ParseException {
+    public Optional<MovieDto> updateMovie(String code, MovieDto movie) {
         var params = MovieHelper.getMovieTitleAndRelease(code);
 
         var release = MovieHelper.getMovieRelease(params[1]);
@@ -91,7 +90,7 @@ public class MovieWatchedService {
         movieRepository.deleteById(id);
     }
 
-    public void deleteMovie(String code) throws ParseException {
+    public void deleteMovie(String code) {
         var params = MovieHelper.getMovieTitleAndRelease(code);
 
         var release = MovieHelper.getMovieRelease(params[1]);

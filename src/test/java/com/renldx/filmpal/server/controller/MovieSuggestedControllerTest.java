@@ -12,8 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Year;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +43,7 @@ class MovieSuggestedControllerTest {
         void getSuggestedMovies_Valid_ReturnsSuggestedMovies(String genre) throws Exception {
             when(movieWatchedService.getMovies()).thenReturn(new ArrayList<>());
 
-            var mockMovie = new MovieDto("TestMovie", new Date());
+            var mockMovie = new MovieDto("TestMovie", Year.parse("2001"));
 
             when(movieSuggestedService.getMovies(any(), any())).thenReturn(List.of(mockMovie));
 

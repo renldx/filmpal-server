@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -42,7 +41,7 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/movie")
-    public ResponseEntity<?> getWatchedMovie(@RequestParam(value = "code") String code) throws Exception {
+    public ResponseEntity<?> getWatchedMovie(@RequestParam(value = "code") String code) {
         Optional<MovieDto> movie;
 
         try {
@@ -79,7 +78,7 @@ public class MovieWatchedController {
     }
 
     @PutMapping("/movie")
-    public ResponseEntity<Optional<MovieDto>> updateWatchedMovie(@Valid @RequestBody MovieDto movie, @RequestParam(value = "code") String code) throws ParseException {
+    public ResponseEntity<Optional<MovieDto>> updateWatchedMovie(@Valid @RequestBody MovieDto movie, @RequestParam(value = "code") String code) {
         log.info("Request to update movie by code: {}", movie);
 
         var result = movieWatchedService.updateMovie(code, movie);
@@ -101,7 +100,7 @@ public class MovieWatchedController {
     }
 
     @DeleteMapping("/movie")
-    public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) throws ParseException {
+    public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) {
         log.info("Request to delete movie by code {}", code);
 
         movieWatchedService.deleteMovie(code);
