@@ -37,23 +37,23 @@ class MovieDetailsControllerTest {
     class getMovieDetailsTest {
 
         @ParameterizedTest
-        @ValueSource(strings = {"tt1234567", "tt12345678"})
-        void getMovieDetails_Valid_ReturnsMovieDetails(String imdbId) throws Exception {
-            when(movieDetailsService.getMovieDetails(imdbId)).thenReturn(mockMovieDetails);
+        @ValueSource(strings = {"Barbie_2023"})
+        void getMovieDetails_Valid_ReturnsMovieDetails(String code) throws Exception {
+            when(movieDetailsService.getMovieDetails(code)).thenReturn(mockMovieDetails);
             when(mockMovieDetails.response()).thenReturn("True");
 
-            mockMvc.perform(get("/api/details/movie?imdbId={imdbId}", imdbId))
+            mockMvc.perform(get("/api/details/movie?code={code}", code))
                     .andDo(print())
                     .andExpect(status().isOk());
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"", "xyz", "tt0000000", "tt00000000"})
-        void getMovieDetails_Invalid_ReturnsNotFound(String imdbId) throws Exception {
-            when(movieDetailsService.getMovieDetails(imdbId)).thenReturn(mockMovieDetails);
+        @ValueSource(strings = {"", "xyz"})
+        void getMovieDetails_Invalid_ReturnsNotFound(String code) throws Exception {
+            when(movieDetailsService.getMovieDetails(code)).thenReturn(mockMovieDetails);
             when(mockMovieDetails.response()).thenReturn("False");
 
-            mockMvc.perform(get("/api/details/movie?imdbId={imdbId}", imdbId))
+            mockMvc.perform(get("/api/details/movie?code={code}", code))
                     .andDo(print())
                     .andExpect(status().isBadRequest());
         }

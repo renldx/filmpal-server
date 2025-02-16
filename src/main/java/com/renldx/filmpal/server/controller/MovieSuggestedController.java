@@ -6,6 +6,7 @@ import com.renldx.filmpal.server.service.MovieSuggestedService;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ public class MovieSuggestedController {
     }
 
     @GetMapping("/{genre}")
+    @Cacheable("suggestedMovies")
     public Collection<MovieDto> getSuggestedMovies(@PathVariable Genre genre) throws Exception {
         var watchedMovies = movieWatchedService.getMovies();
         return movieSuggestedService.getMovies(genre, watchedMovies);

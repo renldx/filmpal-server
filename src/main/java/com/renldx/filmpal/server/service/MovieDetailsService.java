@@ -1,6 +1,7 @@
 package com.renldx.filmpal.server.service;
 
 import com.renldx.filmpal.server.exception.ApiClientException;
+import com.renldx.filmpal.server.helper.MovieHelper;
 import com.renldx.filmpal.server.model.MovieDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -16,13 +17,16 @@ public class MovieDetailsService {
         this.restClient = RestClient.builder().baseUrl("http://www.omdbapi.com").build();
     }
 
-    public MovieDetails getMovieDetails(String imdbId) throws ApiClientException {
+    public MovieDetails getMovieDetails(String code) throws ApiClientException {
         try {
+            var params = MovieHelper.getMovieTitleAndRelease(code);
+
             return restClient
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .queryParam("apikey", System.getenv("OMDB_API_KEY"))
-                            .queryParam("i", imdbId)
+                            .queryParam("t", params[0])
+                            .queryParam("y", params[1])
                             .build())
                     .accept(APPLICATION_JSON)
                     .retrieve()

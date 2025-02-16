@@ -5,6 +5,7 @@ import com.renldx.filmpal.server.model.MovieDetails;
 import com.renldx.filmpal.server.service.MovieDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +26,9 @@ public class MovieDetailsController {
     }
 
     @GetMapping("/movie")
-    public ResponseEntity<MovieDetails> getMovieDetails(@RequestParam(value = "imdbId") String imdbId) throws ApiClientException {
-        var movieDetails = movieDetailsService.getMovieDetails(imdbId);
+    @Cacheable("movieDetails")
+    public ResponseEntity<MovieDetails> getMovieDetails(@RequestParam(value = "code") String code) throws ApiClientException {
+        var movieDetails = movieDetailsService.getMovieDetails(code);
 
         if (Objects.equals(movieDetails.response(), "False")) {
             return ResponseEntity.badRequest().body(movieDetails);

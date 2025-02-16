@@ -11,7 +11,6 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.Year;
 import java.util.Collection;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ public class OpenAiClient {
             watchedMovies = watchedMoviesList.stream().map(MovieDto::getTitle).collect(Collectors.joining(", "));
         }
 
-        return String.format("Excluding the following: %s; list the latest top 5 %s movies including their IMDb IDs and release dates (PST) in ISO 8601 format.", watchedMovies, genre);
+        return String.format("Excluding the following: %s; list the latest best 5 %s movies including their release year.", watchedMovies, genre);
     }
 
     private ChatRequest buildChatRequest(String userMessage) {
@@ -74,7 +73,7 @@ public class OpenAiClient {
     }
 
     public record OpenAiResponse(Collection<OpenAiResponseMovie> movies) {
-        public record OpenAiResponseMovie(String title, Year release) {
+        public record OpenAiResponseMovie(String title, String release) {
         }
     }
 

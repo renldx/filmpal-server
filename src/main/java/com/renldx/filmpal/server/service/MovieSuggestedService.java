@@ -7,6 +7,7 @@ import com.renldx.filmpal.server.model.Genre;
 import com.renldx.filmpal.server.model.MovieDto;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class MovieSuggestedService {
 
     public Collection<MovieDto> getMovies(Genre genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
         var response = openAiClient.getChatResponse(genre, watchedMoviesList);
-        return response.movies().stream().map(m -> new MovieDto(m.title(), m.release())).collect(Collectors.toList());
+        return response.movies().stream().map(m -> new MovieDto(m.title(), Year.parse(m.release()))).collect(Collectors.toList());
     }
 
 }

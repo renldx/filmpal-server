@@ -18,9 +18,9 @@ public class MovieDetailsServiceIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"tt1630029"})
-    void getMovieDetails_ReturnsMovieDetails(String imdbId) throws ApiClientException {
-        MovieDetails movieDetails = movieDetailsService.getMovieDetails(imdbId);
+    @ValueSource(strings = {"Barbie_2023"})
+    void getMovieDetails_ReturnsMovieDetails(String code) throws ApiClientException {
+        MovieDetails movieDetails = movieDetailsService.getMovieDetails(code);
         assertThat(movieDetails).isNotNull();
     }
 
