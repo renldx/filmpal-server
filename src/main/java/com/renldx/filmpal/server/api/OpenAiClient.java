@@ -38,7 +38,7 @@ public class OpenAiClient {
             watchedMovies = watchedMoviesList.stream().map(MovieDto::getTitle).collect(Collectors.joining(", "));
         }
 
-        return String.format("Excluding the following: %s; list the latest best 5 %s movies including their release year.", watchedMovies, genre);
+        return String.format("Excluding the following: %s; list the latest best 5 %s feature-length movies and release years.", watchedMovies, genre);
     }
 
     private ChatRequest buildChatRequest(String userMessage) {

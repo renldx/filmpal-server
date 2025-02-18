@@ -29,7 +29,7 @@ public class MovieWatchedService {
     }
 
     public Optional<MovieDto> getMovie(String code) {
-        var params = MovieHelper.getMovieTitleAndRelease(code);
+        var params = MovieHelper.getMovieTitleAndRelease(code, true);
 
         var release = MovieHelper.getMovieRelease(params[1]);
         var movie = movieRepository.findByTitleAndRelease(params[0], release);
@@ -69,7 +69,7 @@ public class MovieWatchedService {
     }
 
     public Optional<MovieDto> updateMovie(String code, MovieDto movie) {
-        var params = MovieHelper.getMovieTitleAndRelease(code);
+        var params = MovieHelper.getMovieTitleAndRelease(code, true);
 
         var release = MovieHelper.getMovieRelease(params[1]);
         var existingMovie = movieRepository.findByTitleAndRelease(params[0], release);
@@ -91,7 +91,7 @@ public class MovieWatchedService {
     }
 
     public void deleteMovie(String code) {
-        var params = MovieHelper.getMovieTitleAndRelease(code);
+        var params = MovieHelper.getMovieTitleAndRelease(code, true);
 
         var release = MovieHelper.getMovieRelease(params[1]);
         var movie = movieRepository.findByTitleAndRelease(params[0], release);

@@ -11,17 +11,25 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class MovieHelperTest {
 
     @ParameterizedTest
-    @CsvSource({"Don't Look Up,2021"})
+    @CsvSource({"Tár,2022"})
     void getMovieCode_ReturnsMovieCode(String title, String release) {
         var movieCode = MovieHelper.getMovieCode(title, Year.parse(release));
-        assertThat(movieCode).isEqualTo("Don%27t+Look+Up_2021");
+        assertThat(movieCode).isEqualTo("T%C3%A1r_2022");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"Don%27t+Look+Up_2021"})
-    void getMovieTitleAndRelease_ReturnsMovieTitleAndRelease(String code) {
-        var movieTitleAndRelease = MovieHelper.getMovieTitleAndRelease(code);
+    @ValueSource(strings = {"Don't%20Look%20Up_2021"})
+    void getMovieTitleAndRelease_ReturnsDecodedMovieTitleAndRelease(String code) {
+        var movieTitleAndRelease = MovieHelper.getMovieTitleAndRelease(code, true);
         assertThat(movieTitleAndRelease[0]).isEqualTo("Don't Look Up");
+        assertThat(movieTitleAndRelease[1]).isEqualTo("2021");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Don't%20Look%20Up_2021"})
+    void getMovieTitleAndRelease_ReturnsEncodedMovieTitleAndRelease(String code) {
+        var movieTitleAndRelease = MovieHelper.getMovieTitleAndRelease(code, false);
+        assertThat(movieTitleAndRelease[0]).isEqualTo("Don't%20Look%20Up");
         assertThat(movieTitleAndRelease[1]).isEqualTo("2021");
     }
 
