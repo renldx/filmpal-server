@@ -1,6 +1,7 @@
 package com.renldx.filmpal.server.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,11 +17,13 @@ public class Movie {
     private int id;
 
     @Setter
-    @Column(name = "TITLE", nullable = false)
+    @NotBlank
+    @Column(name = "TITLE")
     private String title;
 
     @Setter
-    @Column(name = "RELEASE", nullable = false)
+    @NotBlank
+    @Column(name = "RELEASE")
     private Year release;
 
     public Movie() {
