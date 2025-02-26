@@ -12,7 +12,9 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
@@ -66,11 +68,21 @@ public class OpenAiClient {
     }
 
     public OpenAiResponse getChatResponse(Genre genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
-        var userMessage = buildUserMessage(genre, watchedMoviesList);
-        var chatRequest = buildChatRequest(userMessage);
-        var jsonResponse = sendChatRequest(chatRequest);
+        //var userMessage = buildUserMessage(genre, watchedMoviesList);
+        //var chatRequest = buildChatRequest(userMessage);
+        //var jsonResponse = sendChatRequest(chatRequest);
 
-        return objectMapper.readValue(jsonResponse, OpenAiResponse.class);
+        //return objectMapper.readValue(jsonResponse, OpenAiResponse.class);
+
+        var movies = new ArrayList<>(List.of(
+                new OpenAiResponse.OpenAiResponseMovie("Anora", "2024"),
+                new OpenAiResponse.OpenAiResponseMovie("Oppenheimer", "2023"),
+                new OpenAiResponse.OpenAiResponseMovie("Everything Everywhere All at Once", "2022"),
+                new OpenAiResponse.OpenAiResponseMovie("Nomadland", "2020"),
+                new OpenAiResponse.OpenAiResponseMovie("Dune: Part Two", "2024")
+        ));
+
+        return new OpenAiResponse(movies);
     }
 
     public record OpenAiResponse(Collection<OpenAiResponseMovie> movies) {
