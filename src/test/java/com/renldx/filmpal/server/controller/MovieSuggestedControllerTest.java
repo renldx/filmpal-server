@@ -8,12 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Year;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MovieSuggestedController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class MovieSuggestedControllerTest {
 
     @MockitoBean
@@ -41,7 +43,7 @@ class MovieSuggestedControllerTest {
         @ParameterizedTest
         @ValueSource(strings = {"ACTION"})
         void getSuggestedMovies_Valid_ReturnsSuggestedMovies(String genre) throws Exception {
-            when(movieWatchedService.getMovies()).thenReturn(new ArrayList<>());
+            when(movieWatchedService.getMovies()).thenReturn(Collections.emptySet());
 
             var mockMovie = new MovieDto("TestMovie", Year.parse("2001"));
 

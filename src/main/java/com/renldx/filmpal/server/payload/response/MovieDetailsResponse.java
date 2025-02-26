@@ -1,11 +1,11 @@
-package com.renldx.filmpal.server.model;
+package com.renldx.filmpal.server.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.List;
+import java.util.Set;
 
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public record MovieDetails(
+public record MovieDetailsResponse(
         String title,
         String year,
         String rated,
@@ -20,7 +20,7 @@ public record MovieDetails(
         String country,
         String awards,
         String poster,
-        List<Rating> ratings,
+        Set<Rating> ratings,
         String metascore,
         String imdbRating,
         String imdbVotes,

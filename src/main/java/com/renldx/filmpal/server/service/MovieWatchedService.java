@@ -7,8 +7,8 @@ import com.renldx.filmpal.server.repository.MovieRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,8 +20,8 @@ public class MovieWatchedService {
         this.movieRepository = movieRepository;
     }
 
-    public Collection<MovieDto> getMovies() {
-        return movieRepository.findAll().stream().map(m -> new MovieDto(m.getTitle(), m.getRelease())).collect(Collectors.toList());
+    public Set<MovieDto> getMovies() {
+        return movieRepository.findAll().stream().map(m -> new MovieDto(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
     }
 
     public Optional<MovieDto> getMovie(int id) {

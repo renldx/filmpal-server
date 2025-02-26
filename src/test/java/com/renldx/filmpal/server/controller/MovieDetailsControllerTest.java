@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.model.MovieDetails;
+import com.renldx.filmpal.server.payload.response.MovieDetailsResponse;
 import com.renldx.filmpal.server.service.MovieDetailsService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,9 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MovieDetailsController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class MovieDetailsControllerTest {
 
-    private static MovieDetails mockMovieDetails;
+    private static MovieDetailsResponse mockMovieDetailsResponse;
 
     @MockitoBean
     private MovieDetailsService movieDetailsService;
@@ -30,7 +32,7 @@ class MovieDetailsControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        mockMovieDetails = Mockito.mock(MovieDetails.class);
+        mockMovieDetailsResponse = Mockito.mock(MovieDetailsResponse.class);
     }
 
     @Nested
@@ -38,9 +40,9 @@ class MovieDetailsControllerTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"Barbie_2023"})
-        void getMovieDetails_Valid_ReturnsMovieDetails(String code) throws Exception {
-            when(movieDetailsService.getMovieDetails(code)).thenReturn(mockMovieDetails);
-            when(mockMovieDetails.response()).thenReturn("True");
+        void getMovieDetailsByCode_Valid_ReturnsMovieDetails(String code) throws Exception {
+            when(movieDetailsService.getMovieDetailsByCode(code)).thenReturn(mockMovieDetailsResponse);
+            when(mockMovieDetailsResponse.response()).thenReturn("True");
 
             mockMvc.perform(get("/api/details/movie?code={code}", code))
                     .andDo(print())
@@ -49,9 +51,9 @@ class MovieDetailsControllerTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"", "xyz"})
-        void getMovieDetails_Invalid_ReturnsNotFound(String code) throws Exception {
-            when(movieDetailsService.getMovieDetails(code)).thenReturn(mockMovieDetails);
-            when(mockMovieDetails.response()).thenReturn("False");
+        void getMovieDetailsByCode_Invalid_ReturnsNotFound(String code) throws Exception {
+            when(movieDetailsService.getMovieDetailsByCode(code)).thenReturn(mockMovieDetailsResponse);
+            when(mockMovieDetailsResponse.response()).thenReturn("False");
 
             mockMvc.perform(get("/api/details/movie?code={code}", code))
                     .andDo(print())

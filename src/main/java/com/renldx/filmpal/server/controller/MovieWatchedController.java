@@ -13,8 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/watched/")
@@ -28,7 +28,7 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/movies")
-    public Collection<MovieDto> getWatchedMovies() {
+    public Set<MovieDto> getWatchedMovies() {
         return movieWatchedService.getMovies();
     }
 

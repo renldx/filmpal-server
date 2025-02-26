@@ -1,5 +1,7 @@
 package com.renldx.filmpal.server.controller;
 
+import com.renldx.filmpal.server.constant.ExceptionMessages;
+import com.renldx.filmpal.server.constant.ResponseMessages;
 import com.renldx.filmpal.server.model.Role;
 import com.renldx.filmpal.server.model.RoleCode;
 import com.renldx.filmpal.server.model.User;
@@ -22,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,35 +56,35 @@ public class AuthController {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+                    .body(new MessageResponse(ResponseMessages.USERNAME_TAKEN));
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse(ResponseMessages.EMAIL_USED));
         }
-        
+
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
+        Set<String> roleNames = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
+        if (roleNames == null) {
             Role userRole = roleRepository.findByName(RoleCode.USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new RuntimeException(ExceptionMessages.ROLE_NOT_FOUND));
             roles.add(userRole);
         } else {
-            strRoles.forEach(role -> {
-                if (role.equals("admin")) {
+            roleNames.forEach(role -> {
+                if (RoleCode.ADMIN.name().equalsIgnoreCase(role)) {
                     Role adminRole = roleRepository.findByName(RoleCode.ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            .orElseThrow(() -> new RuntimeException(ExceptionMessages.ROLE_NOT_FOUND));
                     roles.add(adminRole);
                 } else {
                     Role userRole = roleRepository.findByName(RoleCode.USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            .orElseThrow(() -> new RuntimeException(ExceptionMessages.ROLE_NOT_FOUND));
                     roles.add(userRole);
                 }
             });
@@ -92,14 +93,14 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse(ResponseMessages.USER_REGISTERED));
     }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody SigninRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -107,9 +108,9 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        List<String> roles = userDetails.getAuthorities().stream()
+        Set<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         return ResponseEntity.ok(new JwtResponse(
                 jwt,

@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
@@ -20,9 +21,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Year;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,9 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MovieWatchedController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class MovieWatchedControllerTest {
 
-    private static Collection<MovieDto> mockMovies;
+    private static Set<MovieDto> mockMovies;
 
     private static MovieDto mockMovie;
 
@@ -61,7 +62,7 @@ class MovieWatchedControllerTest {
         mockMovie = new MovieDto(mockTitle, mockRelease);
         mockMovieJsonOutput = objectMapper.writeValueAsString(mockMovie);
 
-        mockMovies = List.of(mockMovie);
+        mockMovies = Set.of(mockMovie);
         mockMoviesJsonOutput = objectMapper.writeValueAsString(mockMovies);
     }
 

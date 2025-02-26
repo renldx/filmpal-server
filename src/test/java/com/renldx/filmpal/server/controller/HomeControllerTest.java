@@ -10,15 +10,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class HomeControllerTest {
 
     @Autowired
@@ -38,10 +38,10 @@ class HomeControllerTest {
                     .andReturn();
 
             var json = result.getResponse().getContentAsString();
-            Genre[] genres = objectMapper.readValue(json, new TypeReference<>() {
+            Set<Genre> genres = objectMapper.readValue(json, new TypeReference<>() {
             });
-
-            assertIterableEquals(Arrays.asList(genres), Arrays.asList(Genre.values()));
+            
+            assertEquals(genres, Set.of(Genre.values()));
         }
 
     }

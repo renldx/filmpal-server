@@ -2,6 +2,7 @@ package com.renldx.filmpal.server.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.renldx.filmpal.server.constant.EnvironmentVariables;
 import com.renldx.filmpal.server.exception.ApiClientException;
 import com.renldx.filmpal.server.model.Genre;
 import com.renldx.filmpal.server.model.MovieDto;
@@ -23,7 +24,7 @@ public class OpenAiClient {
 
     public OpenAiClient(ObjectMapper objectMapper) {
         this.simpleOpenAI = SimpleOpenAI.builder()
-                .apiKey(System.getenv("OPENAI_API_KEY"))
+                .apiKey(System.getenv(EnvironmentVariables.OPENAI_API_KEY))
                 .build();
 
         this.objectMapper = objectMapper;

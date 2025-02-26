@@ -1,7 +1,7 @@
 package com.renldx.filmpal.server.controller;
 
 import com.renldx.filmpal.server.exception.ApiClientException;
-import com.renldx.filmpal.server.model.MovieDetails;
+import com.renldx.filmpal.server.payload.response.MovieDetailsResponse;
 import com.renldx.filmpal.server.service.MovieDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +27,8 @@ public class MovieDetailsController {
 
     @GetMapping("/movie")
     @Cacheable("movieDetails")
-    public ResponseEntity<MovieDetails> getMovieDetails(@RequestParam(value = "code") String code) throws ApiClientException {
-        var movieDetails = movieDetailsService.getMovieDetails(code);
+    public ResponseEntity<MovieDetailsResponse> getMovieDetails(@RequestParam(value = "code") String code) throws ApiClientException {
+        var movieDetails = movieDetailsService.getMovieDetailsByCode(code);
 
         if (Objects.equals(movieDetails.response(), "False")) {
             return ResponseEntity.badRequest().body(movieDetails);

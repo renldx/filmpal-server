@@ -1,8 +1,9 @@
 package com.renldx.filmpal.server.service;
 
+import com.renldx.filmpal.server.constant.EnvironmentVariables;
 import com.renldx.filmpal.server.exception.ApiClientException;
 import com.renldx.filmpal.server.helper.MovieHelper;
-import com.renldx.filmpal.server.model.MovieDetails;
+import com.renldx.filmpal.server.payload.response.MovieDetailsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -19,7 +20,7 @@ public class MovieDetailsService {
         this.restClient = RestClient.builder().baseUrl("http://www.omdbapi.com").build();
     }
 
-    public MovieDetails getMovieDetails(String code) throws ApiClientException {
+    public MovieDetailsResponse getMovieDetailsByCode(String code) throws ApiClientException {
         try {
             var params = MovieHelper.getMovieTitleAndRelease(code, false);
 
@@ -33,29 +34,29 @@ public class MovieDetailsService {
         }
     }
 
-    private MovieDetails getMovieDetailsByTitle(String title) {
+    private MovieDetailsResponse getMovieDetailsByTitle(String title) {
         return restClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("apikey", System.getenv("OMDB_API_KEY"))
+                        .queryParam("apikey", System.getenv(EnvironmentVariables.OMDB_API_KEY))
                         .queryParam("t", title)
                         .build())
                 .accept(APPLICATION_JSON)
                 .retrieve()
-                .body(MovieDetails.class);
+                .body(MovieDetailsResponse.class);
     }
 
-    private MovieDetails getMovieDetailsByTitleAndRelease(String title, String release) {
+    private MovieDetailsResponse getMovieDetailsByTitleAndRelease(String title, String release) {
         return restClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("apikey", System.getenv("OMDB_API_KEY"))
+                        .queryParam("apikey", System.getenv(EnvironmentVariables.OMDB_API_KEY))
                         .queryParam("t", title)
                         .queryParam("y", release)
                         .build())
                 .accept(APPLICATION_JSON)
                 .retrieve()
-                .body(MovieDetails.class);
+                .body(MovieDetailsResponse.class);
     }
 
 }

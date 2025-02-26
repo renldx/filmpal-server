@@ -3,12 +3,12 @@ package com.renldx.filmpal.server.payload.response;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 public class JwtResponse {
 
     @Getter
-    private final List<String> roles;
+    private final Set<String> roles;
 
     private String token;
 
@@ -26,7 +26,7 @@ public class JwtResponse {
     @Setter
     private String email;
 
-    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+    public JwtResponse(String accessToken, Long id, String username, String email, Set<String> roles) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
