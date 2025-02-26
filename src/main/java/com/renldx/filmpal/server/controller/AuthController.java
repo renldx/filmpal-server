@@ -53,7 +53,7 @@ public class AuthController {
 
         userService.createUser(signupRequest.username(), signupRequest.email(), signupRequest.password(), signupRequest.role());
 
-        return ResponseEntity.ok(new MessageResponse(ResponseMessages.USER_REGISTERED));
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/signin")

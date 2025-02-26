@@ -1,7 +1,6 @@
 package com.renldx.filmpal.server.service;
 
 import com.renldx.filmpal.server.constant.EnvironmentVariables;
-import com.renldx.filmpal.server.exception.ApiClientException;
 import com.renldx.filmpal.server.helper.MovieHelper;
 import com.renldx.filmpal.server.payload.response.MovieDetailsResponse;
 import org.springframework.stereotype.Service;
@@ -20,17 +19,13 @@ public class MovieDetailsService {
         this.restClient = RestClient.builder().baseUrl("http://www.omdbapi.com").build();
     }
 
-    public MovieDetailsResponse getMovieDetailsByCode(String code) throws ApiClientException {
-        try {
-            var params = MovieHelper.getMovieTitleAndRelease(code, false);
+    public MovieDetailsResponse getMovieDetailsByCode(String code) {
+        var params = MovieHelper.getMovieTitleAndRelease(code, false);
 
-            if (Objects.equals(params[1], "????")) {
-                return getMovieDetailsByTitle(params[0]);
-            } else {
-                return getMovieDetailsByTitleAndRelease(params[0], params[1]);
-            }
-        } catch (Exception e) {
-            throw new ApiClientException(e.getMessage());
+        if (Objects.equals(params[1], "????")) {
+            return getMovieDetailsByTitle(params[0]);
+        } else {
+            return getMovieDetailsByTitleAndRelease(params[0], params[1]);
         }
     }
 

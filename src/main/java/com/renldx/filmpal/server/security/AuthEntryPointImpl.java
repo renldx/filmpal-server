@@ -1,6 +1,5 @@
 package com.renldx.filmpal.server.security;
 
-import com.renldx.filmpal.server.constant.ResponseMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -12,15 +11,15 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class AuthEntryPointJwt implements AuthenticationEntryPoint {
+public class AuthEntryPointImpl implements AuthenticationEntryPoint {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointImpl.class);
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
         logger.error(authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ResponseMessages.UNAUTHORIZED);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
 }

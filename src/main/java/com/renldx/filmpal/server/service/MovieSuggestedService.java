@@ -2,7 +2,6 @@ package com.renldx.filmpal.server.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.renldx.filmpal.server.api.OpenAiClient;
-import com.renldx.filmpal.server.exception.ApiClientException;
 import com.renldx.filmpal.server.model.GenreCode;
 import com.renldx.filmpal.server.model.MovieDto;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class MovieSuggestedService {
     }
 
     // TODO: Refactor collection type to set
-    public Collection<MovieDto> getMovies(GenreCode genreCode, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
+    public Collection<MovieDto> getMovies(GenreCode genreCode, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException {
         var response = openAiClient.getChatResponse(genreCode, watchedMoviesList);
         return response.movies().stream().map(m -> new MovieDto(m.title(), Year.parse(m.release()))).collect(Collectors.toList());
     }

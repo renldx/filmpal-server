@@ -3,7 +3,6 @@ package com.renldx.filmpal.server.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.renldx.filmpal.server.api.OpenAiClient;
-import com.renldx.filmpal.server.exception.ApiClientException;
 import com.renldx.filmpal.server.model.GenreCode;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ public class MovieSuggestedServiceIT {
     }
 
     @Test
-    void getMovies_ReturnsMovies() throws JsonProcessingException, ApiClientException {
+    void getMovies_ReturnsMovies() throws JsonProcessingException {
         var suggestedMovies = movieSuggestedService.getMovies(GenreCode.ACTION, Collections.emptyList());
         assertFalse(suggestedMovies.isEmpty());
     }
