@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.model.Genre;
+import com.renldx.filmpal.server.model.GenreCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +16,8 @@ public class HomeController {
     private final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @GetMapping("/genres")
-    public Set<Genre> getGenres() {
-        return Set.of(Genre.values());
+    public Set<GenreCode> getGenres() {
+        return Set.of(GenreCode.values());
     }
 
 }

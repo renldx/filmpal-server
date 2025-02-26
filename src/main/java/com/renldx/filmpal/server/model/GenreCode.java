@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.model;
 
-public enum Genre {
+public enum GenreCode {
     ACTION,
     COMEDY,
     DRAMA,

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.renldx.filmpal.server.constant.EnvironmentVariables;
 import com.renldx.filmpal.server.exception.ApiClientException;
-import com.renldx.filmpal.server.model.Genre;
+import com.renldx.filmpal.server.model.GenreCode;
 import com.renldx.filmpal.server.model.MovieDto;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
@@ -32,7 +32,8 @@ public class OpenAiClient {
         this.objectMapper = objectMapper;
     }
 
-    private String buildUserMessage(Genre genre, Collection<MovieDto> watchedMoviesList) {
+    // TODO: Refactor collection type to set
+    private String buildUserMessage(GenreCode genreCode, Collection<MovieDto> watchedMoviesList) {
         var watchedMovies = "";
 
         if (watchedMoviesList.isEmpty()) {
@@ -41,7 +42,7 @@ public class OpenAiClient {
             watchedMovies = watchedMoviesList.stream().map(MovieDto::getTitle).collect(Collectors.joining(", "));
         }
 
-        return String.format("Excluding the following: %s; list the latest best 5 %s feature-length movies and release years.", watchedMovies, genre);
+        return String.format("Excluding the following: %s; list the latest best 5 %s feature-length movies and release years.", watchedMovies, genreCode);
     }
 
     private ChatRequest buildChatRequest(String userMessage) {
@@ -67,7 +68,8 @@ public class OpenAiClient {
         }
     }
 
-    public OpenAiResponse getChatResponse(Genre genre, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
+    // TODO: Refactor collection type to set
+    public OpenAiResponse getChatResponse(GenreCode genreCode, Collection<MovieDto> watchedMoviesList) throws JsonProcessingException, ApiClientException {
         //var userMessage = buildUserMessage(genre, watchedMoviesList);
         //var chatRequest = buildChatRequest(userMessage);
         //var jsonResponse = sendChatRequest(chatRequest);
@@ -86,6 +88,7 @@ public class OpenAiClient {
         return new OpenAiResponse(movies);
     }
 
+    // TODO: Refactor collection type to set
     public record OpenAiResponse(Collection<OpenAiResponseMovie> movies) {
         public record OpenAiResponseMovie(String title, String release) {
         }

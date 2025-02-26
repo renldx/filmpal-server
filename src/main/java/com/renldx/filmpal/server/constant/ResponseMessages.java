@@ -8,4 +8,6 @@ public class ResponseMessages {
 
     public static final String USER_REGISTERED = "User registered successfully";
 
+    public static final String UNAUTHORIZED = "Error: Unauthorized";
+
 }
