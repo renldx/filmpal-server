@@ -74,6 +74,7 @@ public class OpenAiClient {
 
         //return objectMapper.readValue(jsonResponse, OpenAiResponse.class);
 
+        // TODO: Fix API access
         var movies = new ArrayList<>(List.of(
                 new OpenAiResponse.OpenAiResponseMovie("Anora", "2024"),
                 new OpenAiResponse.OpenAiResponseMovie("Oppenheimer", "2023"),

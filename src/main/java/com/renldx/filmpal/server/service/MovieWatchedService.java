@@ -19,7 +19,7 @@ public class MovieWatchedService {
     public MovieWatchedService(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
-
+    
     public Set<MovieDto> getMovies() {
         return movieRepository.findAll().stream().map(m -> new MovieDto(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
     }

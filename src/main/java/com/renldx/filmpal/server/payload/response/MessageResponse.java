@@ -1,16 +1,8 @@
 package com.renldx.filmpal.server.payload.response;
 
-import lombok.Getter;
-import lombok.Setter;
+public record MessageResponse(
 
-@Getter
-@Setter
-public class MessageResponse {
+        String message
 
-    private String message;
-
-    public MessageResponse(String message) {
-        this.message = message;
-    }
-
+) {
 }

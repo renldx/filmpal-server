@@ -1,4 +1,14 @@
 package com.renldx.filmpal.server.payload.request;
 
-public record SigninRequest(String username, String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record SigninRequest(
+
+        @NotBlank
+        String username,
+
+        @NotBlank
+        String password
+
+) {
 }
