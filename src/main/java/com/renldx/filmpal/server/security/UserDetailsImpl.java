@@ -15,13 +15,12 @@ public class UserDetailsImpl implements UserDetails {
 
     private final String username;
 
+    private final Set<? extends GrantedAuthority> authorities;
+
     @JsonIgnore
     private String password;
 
-    private final Set<? extends GrantedAuthority> authorities;
-
-    public UserDetailsImpl(String username, String password,
-                           Set<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(String username, String password, Set<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;

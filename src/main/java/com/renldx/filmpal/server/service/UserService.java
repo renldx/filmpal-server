@@ -29,14 +29,8 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
-    public boolean checkIfEmailExists(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    public void createUser(String username, String email, String password, Set<String> roleNames) {
-        var user = new User(username,
-                email,
-                encoder.encode(password));
+    public void createUser(String username, String password, Set<String> roleNames) {
+        var user = new User(username, encoder.encode(password));
 
         var roles = getUserRoles(roleNames);
         setUserRoles(user, roles);

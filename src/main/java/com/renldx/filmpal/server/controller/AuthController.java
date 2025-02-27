@@ -43,13 +43,7 @@ public class AuthController {
                     .body(new MessageResponse(ResponseMessages.USERNAME_TAKEN));
         }
 
-        if (userService.checkIfEmailExists(signupRequest.email())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse(ResponseMessages.EMAIL_USED));
-        }
-
-        userService.createUser(signupRequest.username(), signupRequest.email(), signupRequest.password(), signupRequest.role());
+        userService.createUser(signupRequest.username(), signupRequest.password(), signupRequest.roles());
 
         return ResponseEntity.ok(null);
     }

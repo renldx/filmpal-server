@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Getter
 @Entity
-@Table(name = "USERS", uniqueConstraints = @UniqueConstraint(columnNames = {"USERNAME", "EMAIL"}))
+@Table(name = "USERS", uniqueConstraints = @UniqueConstraint(columnNames = {"USERNAME"}))
 public class User {
 
     @Setter
@@ -31,20 +31,14 @@ public class User {
 
     @Setter
     @NotBlank
-    @Column(name = "EMAIL")
-    private String email;
-
-    @Setter
-    @NotBlank
     @Column(name = "PASSWORD")
     private String password;
 
     public User() {
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String password) {
         this.username = username;
-        this.email = email;
         this.password = password;
     }
 
