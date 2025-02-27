@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Year;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,9 +33,9 @@ public class MovieWatchedService {
         return movieRepository.findAll().stream().map(m -> new MovieDto(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
     }
 
-    public Set<MovieDto> getMoviesByUser() {
+    public Set<Movie> getMoviesByUser() {
         var userId = authHelper.getUserId();
-        return userMovieRepository.findAllByUserId(userId).stream().map(m -> new MovieDto(m.getMovie().getTitle(), m.getMovie().getRelease())).collect(Collectors.toSet());
+        return userMovieRepository.findAllByUserId(userId).stream().map(UserMovie::getMovie).collect(Collectors.toSet());
     }
 
     public Optional<MovieDto> getMovie(int id) {
@@ -67,15 +68,14 @@ public class MovieWatchedService {
     }
 
     @Transactional
-    public MovieDto createMovieByUser(MovieDto movieDto) {
-        var movie = new Movie();
-        BeanUtils.copyProperties(movieDto, movie);
+    public Movie createMovieByUser(String title, Year release) {
+        var movie = new Movie(title, release);
         movieRepository.save(movie);
 
         var userMovie = new UserMovie(authHelper.getUserId(), movie);
         userMovieRepository.save(userMovie);
 
-        return movieDto;
+        return movie;
     }
 
     public Optional<MovieDto> updateMovie(int id, MovieDto movie) {

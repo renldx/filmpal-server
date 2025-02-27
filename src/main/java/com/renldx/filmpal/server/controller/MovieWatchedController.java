@@ -2,6 +2,8 @@ package com.renldx.filmpal.server.controller;
 
 import com.renldx.filmpal.server.constant.ExceptionMessages;
 import com.renldx.filmpal.server.model.MovieDto;
+import com.renldx.filmpal.server.payload.request.MovieCreateRequest;
+import com.renldx.filmpal.server.payload.response.MovieResponse;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/watched/")
@@ -33,8 +36,11 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/moviesByUser")
-    public Set<MovieDto> getWatchedMoviesByUser() {
-        return movieWatchedService.getMoviesByUser();
+    public ResponseEntity<Set<MovieResponse>> getWatchedMoviesByUser() {
+        var userMovies = movieWatchedService.getMoviesByUser();
+        var moviesResponse = userMovies.stream().map(m -> new MovieResponse(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
+
+        return ResponseEntity.ok(moviesResponse);
     }
 
     @GetMapping("/movie/{id}")
@@ -70,13 +76,14 @@ public class MovieWatchedController {
     }
 
     @PostMapping("/movieByUser")
-    public ResponseEntity<MovieDto> createWatchedMovieByUser(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
-        log.info("Request to add movie: {}", movie); // TODO: Fix unique constraint & return URI
+    public ResponseEntity<MovieResponse> createWatchedMovieByUser(@Valid @RequestBody MovieCreateRequest request) throws URISyntaxException {
+        log.info("Request to add movie: {}", request); // TODO: Fix unique constraint & return URI
 
-        MovieDto result = movieWatchedService.createMovieByUser(movie);
+        var movie = movieWatchedService.createMovieByUser(request.title(), request.release());
+        var response = new MovieResponse(movie.getTitle(), movie.getRelease());
 
-        return ResponseEntity.created(new URI("/api/watched/movie?code=" + result.getCode()))
-                .body(result);
+        return ResponseEntity.created(new URI("/api/watched/movie?code=" + response.getCode()))
+                .body(response);
     }
 
     @PutMapping("/movie/{id}")
