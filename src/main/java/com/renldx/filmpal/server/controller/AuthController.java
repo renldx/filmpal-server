@@ -58,16 +58,16 @@ public class AuthController {
 
         var jwt = jwtHelper.generateJwt(authentication);
 
-        var userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        var userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
 
-        var roles = userDetails.getAuthorities().stream()
+        var roles = userDetailsImpl.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
         return ResponseEntity.ok(new JwtResponse(
                 "Bearer",
                 jwt,
-                userDetails.getUsername(),
+                userDetailsImpl.getUsername(),
                 roles));
     }
 

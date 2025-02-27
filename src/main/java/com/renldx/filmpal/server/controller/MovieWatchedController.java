@@ -32,6 +32,11 @@ public class MovieWatchedController {
         return movieWatchedService.getMovies();
     }
 
+    @GetMapping("/moviesByUser")
+    public Set<MovieDto> getWatchedMoviesByUser() {
+        return movieWatchedService.getMoviesByUser();
+    }
+
     @GetMapping("/movie/{id}")
     public ResponseEntity<?> getWatchedMovie(@PathVariable int id) {
         Optional<MovieDto> movie = movieWatchedService.getMovie(id);
@@ -59,6 +64,16 @@ public class MovieWatchedController {
         log.info("Request to add movie: {}", movie); // TODO: Fix unique constraint & return URI
 
         MovieDto result = movieWatchedService.createMovie(movie);
+
+        return ResponseEntity.created(new URI("/api/watched/movie?code=" + result.getCode()))
+                .body(result);
+    }
+
+    @PostMapping("/movieByUser")
+    public ResponseEntity<MovieDto> createWatchedMovieByUser(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
+        log.info("Request to add movie: {}", movie); // TODO: Fix unique constraint & return URI
+
+        MovieDto result = movieWatchedService.createMovieByUser(movie);
 
         return ResponseEntity.created(new URI("/api/watched/movie?code=" + result.getCode()))
                 .body(result);

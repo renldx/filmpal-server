@@ -13,6 +13,9 @@ import java.util.Set;
 @Table(name = "USERS", uniqueConstraints = @UniqueConstraint(columnNames = {"USERNAME"}))
 public class User {
 
+    @OneToMany(mappedBy = "user")
+    Set<UserMovie> userMovies = new HashSet<>();
+
     @Setter
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USER_ROLES",

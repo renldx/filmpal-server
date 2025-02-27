@@ -7,11 +7,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Year;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Entity
 @Table(name = "MOVIES", uniqueConstraints = @UniqueConstraint(columnNames = {"TITLE", "RELEASE"}))
 public class Movie {
+
+    @OneToMany(mappedBy = "movie")
+    Set<UserMovie> userMovies = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

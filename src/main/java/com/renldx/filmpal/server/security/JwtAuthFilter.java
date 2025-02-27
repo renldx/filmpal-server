@@ -37,13 +37,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 var username = jwtHelper.getUserNameFromJwt(jwt);
 
-                var userDetails = userDetailsServiceImpl.loadUserByUsername(username);
+                var userDetailsImpl = userDetailsServiceImpl.loadUserByUsername(username);
 
                 var authenticationToken =
                         new UsernamePasswordAuthenticationToken(
-                                userDetails,
+                                userDetailsImpl,
                                 null,
-                                userDetails.getAuthorities());
+                                userDetailsImpl.getAuthorities());
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

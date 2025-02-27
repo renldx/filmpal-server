@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 @Getter
 public class UserDetailsImpl implements UserDetails {
 
+    private final long id;
+
     private final String username;
 
     private final Set<? extends GrantedAuthority> authorities;
@@ -20,7 +22,8 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
-    public UserDetailsImpl(String username, String password, Set<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(long id, String username, String password, Set<? extends GrantedAuthority> authorities) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -32,6 +35,7 @@ public class UserDetailsImpl implements UserDetails {
                 .collect(Collectors.toSet());
 
         return new UserDetailsImpl(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 authorities);
