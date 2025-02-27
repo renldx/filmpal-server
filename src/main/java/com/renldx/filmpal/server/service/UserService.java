@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public void createUser(String username, String email, String password, Set<String> roleNames) {
-        User user = new User(username,
+        var user = new User(username,
                 email,
                 encoder.encode(password));
 

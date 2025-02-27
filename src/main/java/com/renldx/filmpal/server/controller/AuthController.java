@@ -1,23 +1,21 @@
 package com.renldx.filmpal.server.controller;
 
 import com.renldx.filmpal.server.constant.ResponseMessages;
+import com.renldx.filmpal.server.helper.JwtHelper;
 import com.renldx.filmpal.server.payload.request.SigninRequest;
 import com.renldx.filmpal.server.payload.request.SignupRequest;
 import com.renldx.filmpal.server.payload.response.JwtResponse;
 import com.renldx.filmpal.server.payload.response.MessageResponse;
-import com.renldx.filmpal.server.security.JwtUtils;
 import com.renldx.filmpal.server.security.UserDetailsImpl;
 import com.renldx.filmpal.server.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,12 +26,12 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     private final UserService userService;
-    private final JwtUtils jwtUtils;
+    private final JwtHelper jwtHelper;
 
-    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtHelper jwtHelper) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-        this.jwtUtils = jwtUtils;
+        this.jwtHelper = jwtHelper;
     }
 
     @PostMapping("/signup")
@@ -59,25 +57,23 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody SigninRequest signinRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
+        var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signinRequest.username(), signinRequest.password()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        var jwt = jwtHelper.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        var userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        Set<String> roles = userDetails.getAuthorities().stream()
+        var roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
         return ResponseEntity.ok(new JwtResponse(
                 jwt,
                 "Bearer",
-                userDetails.getId(),
                 userDetails.getUsername(),
-                userDetails.getEmail(),
                 roles));
     }
 

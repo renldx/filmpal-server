@@ -8,11 +8,7 @@ public record JwtResponse(
 
         String type,
 
-        Long id,
-
         String username,
-
-        String email,
 
         Set<String> roles
 

@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.security;
 
-import com.renldx.filmpal.server.service.UserDetailsService;
+import com.renldx.filmpal.server.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,12 +19,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     private final AuthEntryPointImpl unauthorizedHandler;
 
-    public WebSecurityConfig(UserDetailsService userDetailsService, AuthEntryPointImpl unauthorizedHandler) {
-        this.userDetailsService = userDetailsService;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl, AuthEntryPointImpl unauthorizedHandler) {
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.unauthorizedHandler = unauthorizedHandler;
     }
 
@@ -37,7 +37,7 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setUserDetailsService(userDetailsServiceImpl);
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
@@ -49,8 +49,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthFilter authenticationJwtTokenFilter() {
-        return new AuthFilter();
+    public JwtAuthFilter authenticationJwtTokenFilter() {
+        return new JwtAuthFilter();
     }
 
     @Bean
