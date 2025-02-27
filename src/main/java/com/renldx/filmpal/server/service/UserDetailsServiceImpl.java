@@ -1,5 +1,6 @@
 package com.renldx.filmpal.server.service;
 
+import com.renldx.filmpal.server.constant.ExceptionMessages;
 import com.renldx.filmpal.server.repository.UserRepository;
 import com.renldx.filmpal.server.security.UserDetailsImpl;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(ExceptionMessages.USER_NOT_FOUND));
         return UserDetailsImpl.build(user);
     }
 

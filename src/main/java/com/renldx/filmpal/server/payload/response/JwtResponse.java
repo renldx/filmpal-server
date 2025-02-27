@@ -4,9 +4,9 @@ import java.util.Set;
 
 public record JwtResponse(
 
-        String token,
-
         String type,
+
+        String token,
 
         String username,
 

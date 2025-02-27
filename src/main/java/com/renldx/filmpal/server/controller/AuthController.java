@@ -62,7 +62,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        var jwt = jwtHelper.generateJwtToken(authentication);
+        var jwt = jwtHelper.generateJwt(authentication);
 
         var userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
@@ -71,8 +71,8 @@ public class AuthController {
                 .collect(Collectors.toSet());
 
         return ResponseEntity.ok(new JwtResponse(
-                jwt,
                 "Bearer",
+                jwt,
                 userDetails.getUsername(),
                 roles));
     }

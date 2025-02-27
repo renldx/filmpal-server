@@ -33,9 +33,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             var jwt = parseJwt(request);
 
-            if (jwt != null && jwtHelper.validateJwtToken(jwt)) {
+            if (jwt != null && jwtHelper.validateJwt(jwt)) {
 
-                var username = jwtHelper.getUserNameFromJwtToken(jwt);
+                var username = jwtHelper.getUserNameFromJwt(jwt);
 
                 var userDetails = userDetailsServiceImpl.loadUserByUsername(username);
 
