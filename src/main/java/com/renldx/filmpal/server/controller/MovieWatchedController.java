@@ -1,21 +1,17 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.constant.ExceptionMessages;
-import com.renldx.filmpal.server.model.MovieDto;
 import com.renldx.filmpal.server.payload.request.MovieCreateRequest;
+import com.renldx.filmpal.server.payload.request.MovieUpdateRequest;
 import com.renldx.filmpal.server.payload.response.MovieResponse;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,110 +27,72 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/movies")
-    public Set<MovieDto> getWatchedMovies() {
-        return movieWatchedService.getMovies();
+    public Set<MovieResponse> getWatchedMovies() {
+        var movies = movieWatchedService.getMovies();
+        return movies.stream().map(m -> new MovieResponse(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
     }
 
     @GetMapping("/moviesByUser")
-    public ResponseEntity<Set<MovieResponse>> getWatchedMoviesByUser() {
-        var userMovies = movieWatchedService.getMoviesByUser();
-        var moviesResponse = userMovies.stream().map(m -> new MovieResponse(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
-
-        return ResponseEntity.ok(moviesResponse);
+    public Set<MovieResponse> getWatchedMoviesByUser() {
+        var userMovies = movieWatchedService.getUserMovies();
+        return userMovies.stream().map(m -> new MovieResponse(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
     }
 
     @GetMapping("/movie/{id}")
-    public ResponseEntity<?> getWatchedMovie(@PathVariable int id) {
-        Optional<MovieDto> movie = movieWatchedService.getMovie(id);
-
-        return movie.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public MovieResponse getWatchedMovie(@PathVariable int id) {
+        var movie = movieWatchedService.getMovie(id);
+        return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
     @GetMapping("/movie")
-    public ResponseEntity<?> getWatchedMovie(@RequestParam(value = "code") String code) {
-        Optional<MovieDto> movie;
-
-        try {
-            movie = movieWatchedService.getMovie(code);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionMessages.INVALID_CODE_FORMAT, e);
-        }
-
-        return movie.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public MovieResponse getWatchedMovie(@RequestParam(value = "code") String code) {
+        var movie = movieWatchedService.findMovie(code).orElseThrow();
+        return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
     @GetMapping("/movieByUser")
-    public ResponseEntity<MovieResponse> getWatchedMovieByUser(@RequestParam(value = "code") String code) {
-        var movie = movieWatchedService.getMovieByUser(code);
-        var response = new MovieResponse(movie.getTitle(), movie.getRelease());
-
-        return ResponseEntity.ok().body(response);
+    public MovieResponse getWatchedMovieByUser(@RequestParam(value = "code") String code) {
+        var movie = movieWatchedService.getUserMovie(code);
+        return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
     @PostMapping("/movie")
-    public ResponseEntity<MovieDto> createWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
-        log.info("Request to add movie: {}", movie); // TODO: Fix unique constraint & return URI
+    public ResponseEntity<MovieResponse> createWatchedMovie(@Valid @RequestBody MovieCreateRequest request) throws URISyntaxException {
+        var movie = movieWatchedService.createMovie(request.title(), request.release());
+        var response = new MovieResponse(movie.getTitle(), movie.getRelease());
 
-        MovieDto result = movieWatchedService.createMovie(movie);
-
-        return ResponseEntity.created(new URI("/api/watched/movie?code=" + result.getCode()))
-                .body(result);
+        return ResponseEntity.created(new URI("/api/watched/movie?code=" + response.getCode())).body(response);
     }
 
     @PostMapping("/movieByUser")
     public ResponseEntity<MovieResponse> createWatchedMovieByUser(@Valid @RequestBody MovieCreateRequest request) throws URISyntaxException {
-        log.info("Request to add movie: {}", request); // TODO: Fix unique constraint & return URI
-
-        var movie = movieWatchedService.createMovieByUser(request.title(), request.release());
+        var movie = movieWatchedService.createUserMovie(request.title(), request.release());
         var response = new MovieResponse(movie.getTitle(), movie.getRelease());
 
-        return ResponseEntity.created(new URI("/api/watched/movie?code=" + response.getCode()))
-                .body(response);
+        return ResponseEntity.created(new URI("/api/watched/movie?code=" + response.getCode())).body(response);
     }
 
     @PutMapping("/movie/{id}")
-    public ResponseEntity<Optional<MovieDto>> updateWatchedMovie(@Valid @RequestBody MovieDto movie, @PathVariable int id) {
-        log.info("Request to update movie by id: {}", movie);
-
-        var result = movieWatchedService.updateMovie(id, movie);
-
-        if (result.isPresent()) {
-            return ResponseEntity.ok().body(result);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public MovieResponse updateWatchedMovie(@Valid @RequestBody MovieUpdateRequest request, @PathVariable int id) {
+        var movie = movieWatchedService.updateMovie(id, request.title(), request.release());
+        return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
     @PutMapping("/movie")
-    public ResponseEntity<Optional<MovieDto>> updateWatchedMovie(@Valid @RequestBody MovieDto movie, @RequestParam(value = "code") String code) {
-        log.info("Request to update movie by code: {}", movie);
-
-        var result = movieWatchedService.updateMovie(code, movie);
-
-        if (result.isPresent()) {
-            return ResponseEntity.ok().body(result);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public MovieResponse updateWatchedMovie(@Valid @RequestBody MovieUpdateRequest request, @RequestParam(value = "code") String code) {
+        var movie = movieWatchedService.updateMovie(code, request.title(), request.release());
+        return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
     @DeleteMapping("/movie/{id}")
     public ResponseEntity<?> deleteWatchedMovie(@PathVariable int id) {
-        log.info("Request to delete movie by id: {}", id);
-
         movieWatchedService.deleteMovie(id);
-
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/movie")
     public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) {
-        log.info("Request to delete movie by code {}", code);
-
         movieWatchedService.deleteMovie(code);
-
         return ResponseEntity.ok().build();
     }
 

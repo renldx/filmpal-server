@@ -1,7 +1,7 @@
 package com.renldx.filmpal.server.controller;
 
 import com.renldx.filmpal.server.model.GenreCode;
-import com.renldx.filmpal.server.model.MovieDto;
+import com.renldx.filmpal.server.payload.response.MovieResponse;
 import com.renldx.filmpal.server.service.MovieSuggestedService;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/suggested/")
@@ -27,10 +27,9 @@ public class MovieSuggestedController {
         this.movieSuggestedService = movieSuggestedService;
     }
 
-    // TODO: Refactor collection type to set
     @GetMapping("/{genreCode}")
     @Cacheable("suggestedMovies")
-    public Collection<MovieDto> getSuggestedMovies(@PathVariable GenreCode genreCode) throws Exception {
+    public Set<MovieResponse> getSuggestedMovies(@PathVariable GenreCode genreCode) throws Exception {
         var watchedMovies = movieWatchedService.getMovies();
         return movieSuggestedService.getMovies(genreCode, watchedMovies);
     }

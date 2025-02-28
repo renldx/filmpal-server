@@ -3,7 +3,7 @@ package com.renldx.filmpal.server.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.renldx.filmpal.server.constant.EnvironmentVariables;
 import com.renldx.filmpal.server.model.GenreCode;
-import com.renldx.filmpal.server.model.MovieDto;
+import com.renldx.filmpal.server.model.Movie;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
@@ -30,16 +30,16 @@ public class OpenAiClient {
     }
 
     // TODO: Refactor collection type to set
-    private String buildUserMessage(GenreCode genreCode, Collection<MovieDto> watchedMoviesList) {
-        var watchedMovies = "";
+    private String buildUserMessage(GenreCode genreCode, Collection<Movie> watchedMovies) {
+        var watchedMovieNames = "";
 
-        if (watchedMoviesList.isEmpty()) {
-            watchedMovies = "none";
+        if (watchedMovies.isEmpty()) {
+            watchedMovieNames = "none";
         } else {
-            watchedMovies = watchedMoviesList.stream().map(MovieDto::getTitle).collect(Collectors.joining(", "));
+            watchedMovieNames = watchedMovies.stream().map(Movie::getTitle).collect(Collectors.joining(", "));
         }
 
-        return String.format("Excluding the following: %s; list the latest best 5 %s feature-length movies and release years.", watchedMovies, genreCode);
+        return String.format("Excluding the following: %s; list the latest best 5 %s feature-length movies and release years.", watchedMovieNames, genreCode);
     }
 
     private ChatRequest buildChatRequest(String userMessage) {
@@ -61,8 +61,8 @@ public class OpenAiClient {
     }
 
     // TODO: Refactor collection type to set
-    public OpenAiResponse getChatResponse(GenreCode genreCode, Collection<MovieDto> watchedMoviesList) {
-        //var userMessage = buildUserMessage(genre, watchedMoviesList);
+    public OpenAiResponse getChatResponse(GenreCode genreCode, Collection<Movie> watchedMovies) {
+        //var userMessage = buildUserMessage(genre, watchedMovies);
         //var chatRequest = buildChatRequest(userMessage);
         //var jsonResponse = sendChatRequest(chatRequest);
 

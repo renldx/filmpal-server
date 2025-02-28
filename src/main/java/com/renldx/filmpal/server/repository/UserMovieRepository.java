@@ -6,14 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.Year;
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserMovieRepository extends JpaRepository<UserMovie, Integer> {
 
-    Set<UserMovie> findAllByUserId(long userId);
+    List<UserMovie> findAllByUserId(long userId);
 
     @Query(value = "select x from UserMovie x where x.userId=:userId and x.movie.title=:title and x.movie.release=:release")
-    UserMovie findByTitleAndRelease(long userId, String title, Year release);
+    Optional<UserMovie> findByTitleAndRelease(long userId, String title, Year release);
 
 }

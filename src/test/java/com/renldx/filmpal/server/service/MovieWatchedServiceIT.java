@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.service;
 
-import com.renldx.filmpal.server.model.MovieDto;
+import com.renldx.filmpal.server.payload.request.MovieCreateRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +11,7 @@ import org.testcontainers.oracle.OracleContainer;
 import java.time.Year;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -20,11 +20,9 @@ public class MovieWatchedServiceIT {
 
     private final static int movieId = 1;
 
-    static OracleContainer oracleContainer = new OracleContainer(
-            "gvenzl/oracle-free"
-    );
+    static OracleContainer oracleContainer = new OracleContainer("gvenzl/oracle-free");
 
-    private static String movieCode;
+    private static String movieCode = "TestMovie_2001";
 
     @Autowired
     private MovieWatchedService movieWatchedService;
@@ -49,10 +47,9 @@ public class MovieWatchedServiceIT {
     @Test
     @Order(1)
     void createMovie_ReturnsMovie() {
-        var movieInput = new MovieDto("TestMovie", Year.parse("2001"));
-        var movieOutput = movieWatchedService.createMovie(movieInput);
+        var movieInput = new MovieCreateRequest("TestMovie", Year.parse("2001"));
+        var movieOutput = movieWatchedService.createMovie(movieInput.title(), movieInput.release());
 
-        movieCode = movieOutput.getCode();
         assertThat(movieOutput).isNotNull();
     }
 
@@ -72,8 +69,8 @@ public class MovieWatchedServiceIT {
 
     @Test
     @Order(2)
-    void getMovieByCode_ReturnsMovie() {
-        var movie = movieWatchedService.getMovie(movieCode);
+    void findMovieByCode_ReturnsMovie() {
+        var movie = movieWatchedService.findMovie(movieCode);
         assertThat(movie).isNotNull();
     }
 
@@ -82,38 +79,26 @@ public class MovieWatchedServiceIT {
     void updateMovieById_UpdatesMovie() {
         var movie = movieWatchedService.getMovie(movieId);
 
-        if (movie.isEmpty()) {
-            fail();
-        } else {
-            movie.get().setTitle("TestMovieUpdate");
-            var updatedMovie = movieWatchedService.updateMovie(movieId, movie.get());
+        movie.setTitle("TestMovieUpdate");
+        var updatedMovie = movieWatchedService.updateMovie(movieId, movie.getTitle(), movie.getRelease());
 
-            if (updatedMovie.isEmpty()) {
-                fail();
-            } else {
-                movieCode = updatedMovie.get().getCode();
-                assertThat(updatedMovie.get().getTitle()).isEqualTo("TestMovieUpdate");
-            }
-        }
+        movieCode = "TestMovieUpdate_2001";
+        assertThat(updatedMovie.getTitle()).isEqualTo("TestMovieUpdate");
     }
 
     @Test
     @Order(4)
     void updateMovieByCode_UpdatesMovie() {
-        var movie = movieWatchedService.getMovie(movieCode);
+        var movie = movieWatchedService.findMovie(movieCode);
 
         if (movie.isEmpty()) {
             fail();
         } else {
             movie.get().setTitle("TestMovieUpdateAgain");
-            var updatedMovie = movieWatchedService.updateMovie(movieId, movie.get());
+            var updatedMovie = movieWatchedService.updateMovie(movieId, movie.get().getTitle(), movie.get().getRelease());
 
-            if (updatedMovie.isEmpty()) {
-                fail();
-            } else {
-                movieCode = updatedMovie.get().getCode();
-                assertThat(updatedMovie.get().getTitle()).isEqualTo("TestMovieUpdateAgain");
-            }
+            movieCode = "TestMovieUpdateAgain_2001";
+            assertThat(updatedMovie.getTitle()).isEqualTo("TestMovieUpdateAgain");
         }
     }
 

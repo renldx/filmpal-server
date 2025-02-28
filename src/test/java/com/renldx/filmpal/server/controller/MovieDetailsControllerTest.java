@@ -40,7 +40,7 @@ class MovieDetailsControllerTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"Barbie_2023"})
-        void getMovieDetailsByCode_Valid_ReturnsMovieDetails(String code) throws Exception {
+        void getMovieDetails_Valid_ReturnsMovieDetails(String code) throws Exception {
             when(movieDetailsService.getMovieDetailsByCode(code)).thenReturn(mockMovieDetailsResponse);
             when(mockMovieDetailsResponse.response()).thenReturn("True");
 
@@ -51,7 +51,7 @@ class MovieDetailsControllerTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"", "xyz"})
-        void getMovieDetailsByCode_Invalid_ReturnsNotFound(String code) throws Exception {
+        void getMovieDetails_Invalid_ReturnsBadRequest(String code) throws Exception {
             when(movieDetailsService.getMovieDetailsByCode(code)).thenReturn(mockMovieDetailsResponse);
             when(mockMovieDetailsResponse.response()).thenReturn("False");
 

@@ -22,7 +22,7 @@ public class MovieSuggestedServiceIT {
 
     @Test
     void getMovies_ReturnsMovies() throws JsonProcessingException {
-        var suggestedMovies = movieSuggestedService.getMovies(GenreCode.ACTION, Collections.emptyList());
+        var suggestedMovies = movieSuggestedService.getMovies(GenreCode.ACTION, Collections.emptySet());
         assertFalse(suggestedMovies.isEmpty());
     }
 

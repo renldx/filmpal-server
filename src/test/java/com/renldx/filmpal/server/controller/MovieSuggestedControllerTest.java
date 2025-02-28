@@ -1,6 +1,6 @@
 package com.renldx.filmpal.server.controller;
 
-import com.renldx.filmpal.server.model.MovieDto;
+import com.renldx.filmpal.server.payload.response.MovieResponse;
 import com.renldx.filmpal.server.service.MovieSuggestedService;
 import com.renldx.filmpal.server.service.MovieWatchedService;
 import org.junit.jupiter.api.Nested;
@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Year;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -45,9 +45,9 @@ class MovieSuggestedControllerTest {
         void getSuggestedMovies_Valid_ReturnsSuggestedMovies(String genre) throws Exception {
             when(movieWatchedService.getMovies()).thenReturn(Collections.emptySet());
 
-            var mockMovie = new MovieDto("TestMovie", Year.parse("2001"));
+            var mockMovieResponse = new MovieResponse("TestMovie", Year.parse("2001"));
 
-            when(movieSuggestedService.getMovies(any(), any())).thenReturn(List.of(mockMovie));
+            when(movieSuggestedService.getMovies(any(), any())).thenReturn(Set.of(mockMovieResponse));
 
             mockMvc.perform(get("/api/suggested/{genre}", genre))
                     .andDo(print())

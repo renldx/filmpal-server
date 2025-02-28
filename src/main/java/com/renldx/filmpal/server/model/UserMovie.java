@@ -13,8 +13,8 @@ public class UserMovie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne
     @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
     private User user;
 
