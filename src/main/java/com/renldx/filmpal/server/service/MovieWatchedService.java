@@ -58,6 +58,16 @@ public class MovieWatchedService {
         }
     }
 
+    public Movie getMovieByUser(String code) {
+        var userId = authHelper.getUserId();
+        var params = MovieHelper.getMovieTitleAndRelease(code, true);
+        var release = MovieHelper.getMovieRelease(params[1]);
+
+        var userMovie = userMovieRepository.findByTitleAndRelease(userId, params[0], release);
+
+        return userMovie.getMovie();
+    }
+
     public MovieDto createMovie(MovieDto movieDto) {
         var movie = new Movie();
         BeanUtils.copyProperties(movieDto, movie);

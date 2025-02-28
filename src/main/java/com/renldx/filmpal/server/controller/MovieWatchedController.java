@@ -65,6 +65,14 @@ public class MovieWatchedController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/movieByUser")
+    public ResponseEntity<MovieResponse> getWatchedMovieByUser(@RequestParam(value = "code") String code) {
+        var movie = movieWatchedService.getMovieByUser(code);
+        var response = new MovieResponse(movie.getTitle(), movie.getRelease());
+
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping("/movie")
     public ResponseEntity<MovieDto> createWatchedMovie(@Valid @RequestBody MovieDto movie) throws URISyntaxException {
         log.info("Request to add movie: {}", movie); // TODO: Fix unique constraint & return URI
