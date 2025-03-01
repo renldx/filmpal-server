@@ -68,7 +68,7 @@ class MovieWatchedControllerTest {
         var mockMovieCreateRequest = new MovieCreateRequest(mockTitle, mockRelease);
         mockMovieCreateRequestJson = objectMapper.writeValueAsString(mockMovieCreateRequest);
 
-        var mockMovieUpdateRequest = new MovieUpdateRequest(mockCode, mockTitle, mockRelease);
+        var mockMovieUpdateRequest = new MovieUpdateRequest(mockTitle, mockRelease);
         mockMovieUpdateRequestJson = objectMapper.writeValueAsString(mockMovieUpdateRequest);
 
         var mockMovieResponse = new MovieResponse(mockTitle, mockRelease);

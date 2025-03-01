@@ -107,21 +107,23 @@ public class MovieWatchedService {
     }
 
     @Transactional
-    public Movie updateUserMovie(String code, String title, Year release) {
+    public Movie updateUserMovie(String code, String newTitle, Year newRelease) {
         var userId = authHelper.getUserId();
+        var params = MovieHelper.getMovieTitleAndRelease(code, true);
+        var release = MovieHelper.getMovieRelease(params[1]);
 
-        var userMovie = userMovieRepository.findByTitleAndRelease(userId, title, release).orElseThrow();
+        var userMovie = userMovieRepository.findByTitleAndRelease(userId, params[0], release).orElseThrow();
         var otherUserMovies = userMovie.getMovie().getUserMovies().stream().filter(um -> !um.equals(userMovie));
 
-        assert !userMovie.getMovie().getTitle().equals(title) && !userMovie.getMovie().getRelease().equals(release);
+        assert !userMovie.getMovie().getTitle().equals(newTitle) && !userMovie.getMovie().getRelease().equals(newRelease);
 
         // No other related records exist, can be updated
         if (otherUserMovies.findAny().isEmpty()) {
-            return updateMovie(userMovie.getMovie().getId(), title, release);
+            return updateMovie(userMovie.getMovie().getId(), newTitle, newRelease);
         }
         // Other related records exist, must create new
         else {
-            var movie = createMovie(title, release);
+            var movie = createMovie(newTitle, newRelease);
             userMovie.setMovie(movie);
 
             userMovieRepository.save(userMovie);

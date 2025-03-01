@@ -9,9 +9,6 @@ import java.time.Year;
 public record MovieUpdateRequest(
 
         @NotBlank
-        String code,
-
-        @NotBlank
         String title,
 
         @NotNull

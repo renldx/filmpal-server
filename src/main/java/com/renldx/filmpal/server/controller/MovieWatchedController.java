@@ -33,7 +33,7 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/moviesByUser")
-    public Set<MovieResponse> getWatchedMoviesByUser() {
+    public Set<MovieResponse> getWatchedUserMovies() {
         var userMovies = movieWatchedService.getUserMovies();
         return userMovies.stream().map(m -> new MovieResponse(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
     }
@@ -51,7 +51,7 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/movieByUser")
-    public MovieResponse getWatchedMovieByUser(@RequestParam(value = "code") String code) {
+    public MovieResponse getWatchedUserMovie(@RequestParam(value = "code") String code) {
         var movie = movieWatchedService.getUserMovie(code);
         return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
@@ -65,7 +65,7 @@ public class MovieWatchedController {
     }
 
     @PostMapping("/movieByUser")
-    public ResponseEntity<MovieResponse> createWatchedMovieByUser(@Valid @RequestBody MovieCreateRequest request) throws URISyntaxException {
+    public ResponseEntity<MovieResponse> createWatchedUserMovie(@Valid @RequestBody MovieCreateRequest request) throws URISyntaxException {
         var movie = movieWatchedService.createUserMovie(request.title(), request.release());
         var response = new MovieResponse(movie.getTitle(), movie.getRelease());
 
@@ -84,6 +84,12 @@ public class MovieWatchedController {
         return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
+    @PutMapping("/movieByUser")
+    public MovieResponse updateWatchedUserMovie(@Valid @RequestBody MovieUpdateRequest request, @RequestParam(value = "code") String code) {
+        var movie = movieWatchedService.updateUserMovie(code, request.title(), request.release());
+        return new MovieResponse(movie.getTitle(), movie.getRelease());
+    }
+
     @DeleteMapping("/movie/{id}")
     public ResponseEntity<?> deleteWatchedMovie(@PathVariable int id) {
         movieWatchedService.deleteMovie(id);
@@ -93,6 +99,12 @@ public class MovieWatchedController {
     @DeleteMapping("/movie")
     public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) {
         movieWatchedService.deleteMovie(code);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/movieByUser")
+    public ResponseEntity<?> deleteWatchedUserMovie(@RequestParam(value = "code") String code) {
+        movieWatchedService.deleteUserMovie(code);
         return ResponseEntity.ok().build();
     }
 
