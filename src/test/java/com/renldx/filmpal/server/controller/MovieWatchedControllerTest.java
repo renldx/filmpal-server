@@ -24,7 +24,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Year;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,15 +41,11 @@ class MovieWatchedControllerTest {
     private static Movie mockMovie;
     private static Set<Movie> mockMovies;
 
-    private static MovieCreateRequest mockMovieCreateRequest;
-    private static MovieUpdateRequest mockMovieUpdateRequest;
+    private static String mockMovieCreateRequestJson;
+    private static String mockMovieUpdateRequestJson;
 
-    private static MovieResponse mockMovieResponse;
-    private static Set<MovieResponse> mockMoviesResponse;
-
-    private static String mockMovieJsonInput;
-    private static String mockMovieJsonOutput;
-    private static String mockMoviesJsonOutput;
+    private static String mockMovieResponseJson;
+    private static String mockMoviesResponseJson;
 
     @MockitoBean
     private MovieWatchedService movieWatchedService;
@@ -63,23 +58,24 @@ class MovieWatchedControllerTest {
         var objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
-        String mockCode = "TestMovie_2001";
-        String mockTitle = "TestMovie";
-        Year mockRelease = Year.parse("2001");
-
-        //mockMovieJsonInput = String.format("{\"title\":\"%s\",\"release\":\"%s\"}", mockTitle, mockRelease);
+        var mockCode = "TestMovie_2001";
+        var mockTitle = "TestMovie";
+        var mockRelease = Year.parse("2001");
 
         mockMovie = new Movie(mockTitle, mockRelease);
-        mockMovieJsonOutput = objectMapper.writeValueAsString(mockMovie);
-
         mockMovies = Set.of(mockMovie);
-        mockMoviesJsonOutput = objectMapper.writeValueAsString(mockMovies);
 
-        mockMovieCreateRequest = new MovieCreateRequest(mockTitle, mockRelease);
-        mockMovieUpdateRequest = new MovieUpdateRequest(mockCode, mockTitle, mockRelease);
+        var mockMovieCreateRequest = new MovieCreateRequest(mockTitle, mockRelease);
+        mockMovieCreateRequestJson = objectMapper.writeValueAsString(mockMovieCreateRequest);
 
-        mockMovieResponse = new MovieResponse(mockTitle, mockRelease);
-        mockMoviesResponse = new HashSet<>(mockMoviesResponse);
+        var mockMovieUpdateRequest = new MovieUpdateRequest(mockCode, mockTitle, mockRelease);
+        mockMovieUpdateRequestJson = objectMapper.writeValueAsString(mockMovieUpdateRequest);
+
+        var mockMovieResponse = new MovieResponse(mockTitle, mockRelease);
+        mockMovieResponseJson = objectMapper.writeValueAsString(mockMovieResponse);
+
+        var mockMoviesResponse = Set.of(mockMovieResponse);
+        mockMoviesResponseJson = objectMapper.writeValueAsString(mockMoviesResponse);
     }
 
     @Nested
@@ -96,7 +92,7 @@ class MovieWatchedControllerTest {
 
             var json = result.getResponse().getContentAsString();
 
-            JSONAssert.assertEquals(mockMoviesJsonOutput, json, true);
+            JSONAssert.assertEquals(mockMoviesResponseJson, json, true);
         }
 
     }
@@ -116,7 +112,7 @@ class MovieWatchedControllerTest {
 
             var json = result.getResponse().getContentAsString();
 
-            JSONAssert.assertEquals(mockMovieJsonOutput, json, true);
+            JSONAssert.assertEquals(mockMovieResponseJson, json, true);
         }
 
 //        @ParameterizedTest
@@ -155,7 +151,7 @@ class MovieWatchedControllerTest {
 
             var json = result.getResponse().getContentAsString();
 
-            JSONAssert.assertEquals(mockMovieJsonOutput, json, true);
+            JSONAssert.assertEquals(mockMovieResponseJson, json, true);
         }
 
         @ParameterizedTest
@@ -190,7 +186,7 @@ class MovieWatchedControllerTest {
             mockMvc.perform(post("/api/watched/movie")
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
-                            .content(mockMovieJsonInput))
+                            .content(mockMovieCreateRequestJson))
                     .andDo(print())
                     .andExpect(status().isCreated());
         }
@@ -213,7 +209,7 @@ class MovieWatchedControllerTest {
             mockMvc.perform(post("/api/watched/movie")
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
-                            .content(mockMovieJsonInput))
+                            .content(mockMovieCreateRequestJson))
                     .andDo(print())
                     .andExpect(status().isUnprocessableEntity());
         }
@@ -231,7 +227,7 @@ class MovieWatchedControllerTest {
             mockMvc.perform(put("/api/watched/movie/{id}", id)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
-                            .content(mockMovieJsonInput))
+                            .content(mockMovieUpdateRequestJson))
                     .andDo(print())
                     .andExpect(status().isOk());
         }
@@ -273,7 +269,7 @@ class MovieWatchedControllerTest {
             mockMvc.perform(put("/api/watched/movie?code={code}", code)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
-                            .content(mockMovieJsonInput))
+                            .content(mockMovieUpdateRequestJson))
                     .andDo(print())
                     .andExpect(status().isOk());
         }
@@ -299,7 +295,7 @@ class MovieWatchedControllerTest {
             mockMvc.perform(put("/api/watched/movie?code={code}", code)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
-                            .content(mockMovieJsonInput))
+                            .content(mockMovieUpdateRequestJson))
                     .andDo(print())
                     .andExpect(status().isBadRequest());
         }
