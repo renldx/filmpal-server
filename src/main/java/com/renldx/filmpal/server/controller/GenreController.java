@@ -11,9 +11,9 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/")
-public class HomeController {
+public class GenreController {
 
-    private final Logger log = LoggerFactory.getLogger(HomeController.class);
+    private final Logger log = LoggerFactory.getLogger(GenreController.class);
 
     @GetMapping("/genres")
     public Set<GenreCode> getGenres() {

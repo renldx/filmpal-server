@@ -43,7 +43,7 @@ class MovieSuggestedControllerTest {
         @ParameterizedTest
         @ValueSource(strings = {"ACTION"})
         void getSuggestedMovies_Valid_ReturnsSuggestedMovies(String genre) throws Exception {
-            when(movieWatchedService.getMovies()).thenReturn(Collections.emptySet());
+            when(movieWatchedService.getUserMovies()).thenReturn(Collections.emptySet());
 
             var mockMovieResponse = new MovieResponse("TestMovie", Year.parse("2001"));
 

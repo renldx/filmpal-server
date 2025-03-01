@@ -27,44 +27,18 @@ public class MovieWatchedController {
     }
 
     @GetMapping("/movies")
-    public Set<MovieResponse> getWatchedMovies() {
-        var movies = movieWatchedService.getMovies();
-        return movies.stream().map(m -> new MovieResponse(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
-    }
-
-    @GetMapping("/moviesByUser")
     public Set<MovieResponse> getWatchedUserMovies() {
         var userMovies = movieWatchedService.getUserMovies();
         return userMovies.stream().map(m -> new MovieResponse(m.getTitle(), m.getRelease())).collect(Collectors.toSet());
     }
 
-    @GetMapping("/movie/{id}")
-    public MovieResponse getWatchedMovie(@PathVariable int id) {
-        var movie = movieWatchedService.getMovie(id);
-        return new MovieResponse(movie.getTitle(), movie.getRelease());
-    }
-
     @GetMapping("/movie")
-    public MovieResponse getWatchedMovie(@RequestParam(value = "code") String code) {
-        var movie = movieWatchedService.findMovie(code).orElseThrow();
-        return new MovieResponse(movie.getTitle(), movie.getRelease());
-    }
-
-    @GetMapping("/movieByUser")
     public MovieResponse getWatchedUserMovie(@RequestParam(value = "code") String code) {
-        var movie = movieWatchedService.getUserMovie(code);
+        var movie = movieWatchedService.getUserMovie(code).orElseThrow();
         return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
     @PostMapping("/movie")
-    public ResponseEntity<MovieResponse> createWatchedMovie(@Valid @RequestBody MovieCreateRequest request) throws URISyntaxException {
-        var movie = movieWatchedService.createMovie(request.title(), request.release());
-        var response = new MovieResponse(movie.getTitle(), movie.getRelease());
-
-        return ResponseEntity.created(new URI("/api/watched/movie?code=" + response.getCode())).body(response);
-    }
-
-    @PostMapping("/movieByUser")
     public ResponseEntity<MovieResponse> createWatchedUserMovie(@Valid @RequestBody MovieCreateRequest request) throws URISyntaxException {
         var movie = movieWatchedService.createUserMovie(request.title(), request.release());
         var response = new MovieResponse(movie.getTitle(), movie.getRelease());
@@ -72,37 +46,13 @@ public class MovieWatchedController {
         return ResponseEntity.created(new URI("/api/watched/movie?code=" + response.getCode())).body(response);
     }
 
-    @PutMapping("/movie/{id}")
-    public MovieResponse updateWatchedMovie(@Valid @RequestBody MovieUpdateRequest request, @PathVariable int id) {
-        var movie = movieWatchedService.updateMovie(id, request.title(), request.release());
-        return new MovieResponse(movie.getTitle(), movie.getRelease());
-    }
-
     @PutMapping("/movie")
-    public MovieResponse updateWatchedMovie(@Valid @RequestBody MovieUpdateRequest request, @RequestParam(value = "code") String code) {
-        var movie = movieWatchedService.updateMovie(code, request.title(), request.release());
-        return new MovieResponse(movie.getTitle(), movie.getRelease());
-    }
-
-    @PutMapping("/movieByUser")
     public MovieResponse updateWatchedUserMovie(@Valid @RequestBody MovieUpdateRequest request, @RequestParam(value = "code") String code) {
         var movie = movieWatchedService.updateUserMovie(code, request.title(), request.release());
         return new MovieResponse(movie.getTitle(), movie.getRelease());
     }
 
-    @DeleteMapping("/movie/{id}")
-    public ResponseEntity<?> deleteWatchedMovie(@PathVariable int id) {
-        movieWatchedService.deleteMovie(id);
-        return ResponseEntity.ok().build();
-    }
-
     @DeleteMapping("/movie")
-    public ResponseEntity<?> deleteWatchedMovie(@RequestParam(value = "code") String code) {
-        movieWatchedService.deleteMovie(code);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/movieByUser")
     public ResponseEntity<?> deleteWatchedUserMovie(@RequestParam(value = "code") String code) {
         movieWatchedService.deleteUserMovie(code);
         return ResponseEntity.ok().build();

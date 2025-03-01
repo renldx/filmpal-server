@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,34 +27,19 @@ public class MovieWatchedService {
         this.userMovieRepository = userMovieRepository;
     }
 
-    public Set<Movie> getMovies() {
-        return new HashSet<>(movieRepository.findAll());
-    }
-
     public Set<Movie> getUserMovies() {
         var userId = authHelper.getUserId();
         return userMovieRepository.findAllByUserId(userId).stream().map(UserMovie::getMovie).collect(Collectors.toSet());
     }
 
-    public Movie getMovie(int id) {
-        return movieRepository.findById(id).orElseThrow();
-    }
-
-    public Optional<Movie> findMovie(String code) {
-        var params = MovieHelper.getMovieTitleAndRelease(code, true);
-        var release = MovieHelper.getMovieRelease(params[1]);
-
-        return movieRepository.findByTitleAndRelease(params[0], release);
-    }
-
-    public Movie getUserMovie(String code) {
+    public Optional<Movie> getUserMovie(String code) {
         var userId = authHelper.getUserId();
         var params = MovieHelper.getMovieTitleAndRelease(code, true);
         var release = MovieHelper.getMovieRelease(params[1]);
 
-        var userMovie = userMovieRepository.findByTitleAndRelease(userId, params[0], release).orElseThrow();
+        var userMovie = userMovieRepository.findByTitleAndRelease(userId, params[0], release);
 
-        return userMovie.getMovie();
+        return userMovie.map(UserMovie::getMovie);
     }
 
     public Movie createMovie(String title, Year release) {
@@ -69,7 +53,7 @@ public class MovieWatchedService {
     @Transactional
     public Movie createUserMovie(String title, Year release) {
         var userId = authHelper.getUserId();
-        var movie = findMovie(MovieHelper.getMovieCode(title, release));
+        var movie = getUserMovie(MovieHelper.getMovieCode(title, release));
 
         if (movie.isEmpty()) {
             movie = Optional.of(createMovie(title, release));
@@ -92,20 +76,6 @@ public class MovieWatchedService {
         return movie;
     }
 
-    public Movie updateMovie(String code, String newTitle, Year newRelease) {
-        var params = MovieHelper.getMovieTitleAndRelease(code, true);
-        var release = MovieHelper.getMovieRelease(params[1]);
-
-        var movie = movieRepository.findByTitleAndRelease(params[0], release).orElseThrow();
-
-        movie.setTitle(newTitle);
-        movie.setRelease(newRelease);
-
-        movieRepository.save(movie);
-
-        return movie;
-    }
-
     @Transactional
     public Movie updateUserMovie(String code, String newTitle, Year newRelease) {
         var userId = authHelper.getUserId();
@@ -115,7 +85,7 @@ public class MovieWatchedService {
         var userMovie = userMovieRepository.findByTitleAndRelease(userId, params[0], release).orElseThrow();
         var otherUserMovies = userMovie.getMovie().getUserMovies().stream().filter(um -> !um.equals(userMovie));
 
-        assert !userMovie.getMovie().getTitle().equals(newTitle) && !userMovie.getMovie().getRelease().equals(newRelease);
+        assert !userMovie.getMovie().getTitle().equals(newTitle) || !userMovie.getMovie().getRelease().equals(newRelease);
 
         // No other related records exist, can be updated
         if (otherUserMovies.findAny().isEmpty()) {
@@ -134,15 +104,6 @@ public class MovieWatchedService {
 
     public void deleteMovie(int id) {
         movieRepository.deleteById(id);
-    }
-
-    public void deleteMovie(String code) {
-        var params = MovieHelper.getMovieTitleAndRelease(code, true);
-        var release = MovieHelper.getMovieRelease(params[1]);
-
-        var movie = movieRepository.findByTitleAndRelease(params[0], release);
-
-        movie.ifPresent(m -> deleteMovie(m.getId()));
     }
 
     @Transactional

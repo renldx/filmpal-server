@@ -30,7 +30,7 @@ public class MovieSuggestedController {
     @GetMapping("/{genreCode}")
     @Cacheable("suggestedMovies")
     public Set<MovieResponse> getSuggestedMovies(@PathVariable GenreCode genreCode) throws Exception {
-        var watchedMovies = movieWatchedService.getMovies();
+        var watchedMovies = movieWatchedService.getUserMovies();
         return movieSuggestedService.getMovies(genreCode, watchedMovies);
     }
 
