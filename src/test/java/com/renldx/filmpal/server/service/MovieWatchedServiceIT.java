@@ -1,7 +1,6 @@
 package com.renldx.filmpal.server.service;
 
 import com.renldx.filmpal.server.helper.AuthHelper;
-import com.renldx.filmpal.server.payload.request.MovieCreateRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,8 +62,7 @@ public class MovieWatchedServiceIT {
     void createMovie_ReturnsMovie() {
         when(authHelper.getUserId()).thenReturn(1L);
 
-        var movieInput = new MovieCreateRequest("TestMovie", Year.parse("2001"));
-        var movieOutput = movieWatchedService.createUserMovie(movieInput.title(), movieInput.release());
+        var movieOutput = movieWatchedService.createUserMovie("TestMovie", Year.parse("2001"));
 
         assertThat(movieOutput).isNotNull();
     }

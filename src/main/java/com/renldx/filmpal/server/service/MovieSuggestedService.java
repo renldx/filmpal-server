@@ -20,7 +20,6 @@ public class MovieSuggestedService {
         this.openAiClient = openAiClient;
     }
 
-    // TODO: Refactor collection type to set
     public Set<MovieResponse> getMovies(GenreCode genreCode, Set<Movie> watchedMovies) throws JsonProcessingException {
         var response = openAiClient.getChatResponse(genreCode, watchedMovies);
         return response.movies().stream().map(m -> new MovieResponse(m.title(), Year.parse(m.release()))).collect(Collectors.toSet());
